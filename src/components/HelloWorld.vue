@@ -1,4 +1,6 @@
 <script setup>
+import InputText from 'primevue/inputtext';
+
 defineProps({
   msg: {
     type: String,
@@ -15,6 +17,10 @@ defineProps({
       <a href="https://vitejs.dev/" target="_blank" rel="noopener">Vite</a> +
       <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
     </h3>
+    <span class="p-float-label">
+      <InputText id="username" v-model="value" />
+      <label for="username">Username</label>
+    </span>
   </div>
 </template>
 

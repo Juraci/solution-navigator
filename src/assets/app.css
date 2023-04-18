@@ -1,0 +1,3 @@
+body {
+  font-family: var(--font-family); /* import font family from current theme */
+}

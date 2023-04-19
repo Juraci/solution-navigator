@@ -1,17 +1,16 @@
 import { defineStore } from 'pinia';
 
 export const useNodeStore = defineStore('NodeStore', {
-  state() {
-    return {
-      nodes: [
-        {
-          id: 1,
-          title: 'My title',
-          description: 'My description',
-          childNodes: [2, 3],
-          parentNode: null,
-        },
-      ],
-    };
+  state: () => ({ nodes: [], counter: 0 }),
+  getters: {
+    nodesList() {
+      return this.nodes;
+    },
+  },
+  actions: {
+    increment() {
+      this.counter++;
+      this.nodes.push({ title: `Item ${this.counter}` });
+    },
   },
 });

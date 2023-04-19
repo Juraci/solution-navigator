@@ -1,5 +1,6 @@
 <script setup>
 import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 import { ref, watchEffect, computed } from 'vue';
 import { useNodeStore } from '@/stores/NodeStore';
 
@@ -27,11 +28,12 @@ defineProps({
 <template>
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
-    <span v-for="node in nodeStore.nodes" :key="node.id">{{ node.title }}</span>
+    <span class="node" v-for="node in nodeStore.nodesList" :key="node.id">{{ node.title }}</span>
     <span class="p-float-label">
       <InputText id="freeText" v-model="username" @input="onInput" />
       <label for="freeText">FreeText</label>
     </span>
+    <Button label="Add" @click="nodeStore.increment()" />
   </div>
 </template>
 

@@ -1,10 +1,10 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue';
+import NodeForm from '@/components/NodeForm.vue';
 </script>
 
 <template>
   <div class="container">
-    <HelloWorld msg="You did it!" />
+    <NodeForm />
   </div>
 </template>
 

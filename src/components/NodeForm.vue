@@ -4,12 +4,12 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import { useNodeStore } from '@/stores/NodeStore';
 
-const nodeStore = useNodeStore();
+const store = useNodeStore();
 const nodeTitle = ref('');
 
 const addNode = () => {
   if (nodeTitle.value === '') return;
-  nodeStore.addNode({ title: nodeTitle.value });
+  store.addNode({ title: nodeTitle.value });
 };
 </script>
 

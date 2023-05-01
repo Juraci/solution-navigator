@@ -2,6 +2,10 @@
   "name": "solution-navigator",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "npm": ">=9.0.0 <10.0.0",
+    "node": ">=18.0.0 <19.0.0"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",

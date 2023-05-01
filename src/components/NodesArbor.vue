@@ -7,11 +7,15 @@ const store = useNodeStore();
 
 <template>
   <div class="nodes-arbor">
-    <Card v-for="node in store.nodesList" :key="node.uuid">
+    <Card data-test-node-item v-for="node in store.nodesList" :key="node.uuid">
       <template #title>{{ node.title }}</template>
       <template #content>{{ node.description }}</template>
     </Card>
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+.nodes-arbor {
+  margin-top: 30px;
+}
+</style>

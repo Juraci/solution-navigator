@@ -32,7 +32,7 @@ describe('NodesArbor', () => {
       },
     });
 
-    expect(wrapper.findAll('.p-card').length).toBe(1);
+    expect(wrapper.findAll('[data-test-node-item]').length).toBe(1);
     const card = wrapper.find('.p-card');
     expect(card.find('.p-card-title').text()).toEqual('Persist Pinia State');
     expect(card.find('.p-card-content').text()).toEqual('Learn how to persist Pinia state');

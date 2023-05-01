@@ -6,10 +6,12 @@ const store = useNodeStore();
 </script>
 
 <template>
-  <Card v-for="node in store.nodesList" :key="node.uuid">
-    <template #title>{{ node.title }}</template>
-    <template #content>{{ node.description }}</template>
-  </Card>
+  <div class="nodes-arbor">
+    <Card v-for="node in store.nodesList" :key="node.uuid">
+      <template #title>{{ node.title }}</template>
+      <template #content>{{ node.description }}</template>
+    </Card>
+  </div>
 </template>
 
 <style scoped></style>

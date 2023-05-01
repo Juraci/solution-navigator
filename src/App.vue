@@ -16,5 +16,6 @@ import NodesArbor from '@/components/NodesArbor.vue';
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  flex-direction: column;
 }
 </style>

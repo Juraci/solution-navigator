@@ -17,5 +17,6 @@ const store = useNodeStore();
 <style scoped>
 .nodes-arbor {
   margin-top: 30px;
+  min-width: 600px;
 }
 </style>

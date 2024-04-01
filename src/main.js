@@ -7,7 +7,7 @@ import router from './router';
 import './assets/app.css';
 
 // PrimeVue
-import 'primevue/resources/themes/md-dark-indigo/theme.css';
+import 'primevue/resources/themes/aura-dark-noir/theme.css';
 import 'primevue/resources/primevue.min.css';
 import 'primeicons/primeicons.css';
 

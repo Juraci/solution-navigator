@@ -18,7 +18,7 @@ describe('NodeStore', () => {
     expect(nodeStore.nodes.length).toBe(0);
     nodeStore.addNode({
       title: 'example',
-      description: 'my description',
+      content: 'my content',
       resolved: false,
       childNodes: [],
       pomodoroCount: 0,
@@ -28,7 +28,7 @@ describe('NodeStore', () => {
     const node = nodeStore.nodes[0];
     expect(node.uuid).not.toBeUndefined();
     expect(node).toHaveProperty('title', 'example');
-    expect(node).toHaveProperty('description', 'my description');
+    expect(node).toHaveProperty('content', 'my content');
     expect(node).toHaveProperty('resolved', false);
     expect(node).toHaveProperty('childNodes', []);
     expect(node).toHaveProperty('pomodoroCount', 0);
@@ -38,7 +38,7 @@ describe('NodeStore', () => {
     const nodeStore = useNodeStore();
     nodeStore.addNode({
       title: 'example',
-      description: 'my description',
+      content: 'my content',
       resolved: false,
       childNodes: [],
       pomodoroCount: 0,

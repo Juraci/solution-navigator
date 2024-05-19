@@ -12,7 +12,7 @@ export const useNodeStore = defineStore('NodeStore', () => {
   // actions
   const addNode = ({
     title,
-    description = '',
+    content = '',
     resolved = false,
     childNodes = [],
     parentNode = null,
@@ -21,7 +21,7 @@ export const useNodeStore = defineStore('NodeStore', () => {
     nodes.value.push({
       uuid: uuidv4(),
       title,
-      description,
+      content,
       resolved,
       childNodes,
       parentNode,

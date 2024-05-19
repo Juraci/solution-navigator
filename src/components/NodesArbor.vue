@@ -7,10 +7,17 @@ const store = useNodeStore();
 
 <template>
   <div class="side-panel">
-    <Card data-test-node-item v-for="node in store.nodesList" :key="node.uuid">
-      <template #title>{{ node.title }}</template>
-      <template #content>{{ node.description }}</template>
-    </Card>
+    <router-link
+      v-for="node in store.nodesList"
+      :key="node.uuid"
+      :to="`/nodes/${node.uuid}`"
+      style="text-decoration: none; color: inherit;"
+    >
+      <Card data-test-node-item>
+        <template #title>{{ node.title }}</template>
+        <template #content>{{ node.description }}</template>
+      </Card>
+    </router-link>
   </div>
 </template>
 

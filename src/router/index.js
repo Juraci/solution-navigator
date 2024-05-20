@@ -1,18 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Home from '@/views/Home.vue';
+import HomeIndex from '@/views/HomeIndex.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'Home',
-    component: Home,
+    name: 'HomeIndex',
+    component: HomeIndex,
     children: [
       {
         path: 'nodes/:uuid',
         name: 'node.show',
         component: () => import('@/views/NodeShow.vue'),
-        props: route => ({ nodeUuid: route.params.uuid }),
-      }
+        props: (route) => ({ nodeUuid: route.params.uuid }),
+      },
     ],
   },
 ];

@@ -17,7 +17,7 @@ const addNode = () => {
 <template>
   <form @submit.prevent="addNode">
     <div class="p-inputgroup flex-1">
-      <InputText data-test-input v-model="nodeTitle" placeholder="Node title" />
+      <InputText v-model="nodeTitle" data-test-input placeholder="Node title" />
       <Button type="submit" data-test-btn label="Add" />
     </div>
   </form>

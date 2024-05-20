@@ -11,11 +11,15 @@ const store = useNodeStore();
       v-for="node in store.nodesList"
       :key="node.uuid"
       :to="`/nodes/${node.uuid}`"
-      style="text-decoration: none; color: inherit;"
+      style="text-decoration: none; color: inherit"
     >
       <Card data-test-node-item>
-        <template #title>{{ node.title }}</template>
-        <template #content>{{ node.description }}</template>
+        <template #title>
+          {{ node.title }}
+        </template>
+        <template #content>
+          {{ node.description }}
+        </template>
       </Card>
     </router-link>
   </div>

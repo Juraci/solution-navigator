@@ -17,7 +17,6 @@ const compat = new FlatCompat({
 export default [
   ESLint.configs.recommended,
   ...pluginVue.configs['flat/recommended'],
-  ESLintConfigPrettier,
   ...compat.config({
     extends: ['plugin:cypress/recommended'],
     rules: {
@@ -25,6 +24,7 @@ export default [
     },
   }),
   ...compat.extends('plugin:vue/vue3-recommended'),
+  ESLintConfigPrettier,
   {
     ignores: ['dist', 'node_modules'],
   },

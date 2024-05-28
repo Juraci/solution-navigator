@@ -16,7 +16,7 @@ describe('NodesArbor', () => {
                   {
                     uuid: '8eff4189-c022-4c88-9cea-d3c66a5cee88',
                     title: 'Persist Pinia State',
-                    description: 'Learn how to persist Pinia state',
+                    content: 'Learn how to persist Pinia state',
                     childNodes: [],
                     parentNode: null,
                     resolved: false,

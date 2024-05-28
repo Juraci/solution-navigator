@@ -4,11 +4,24 @@ import HomeIndex from '@/views/HomeIndex.vue';
 const routes = [
   {
     path: '/',
-    name: 'HomeIndex',
+    name: 'index',
     component: HomeIndex,
     children: [
       {
         path: 'nodes/:uuid',
+        name: 'node.show',
+        component: () => import('@/views/NodeShow.vue'),
+        props: (route) => ({ nodeUuid: route.params.uuid }),
+      },
+    ],
+  },
+  {
+    path: '/nodes',
+    name: 'nodes.index',
+    component: HomeIndex,
+    children: [
+      {
+        path: ':uuid',
         name: 'node.show',
         component: () => import('@/views/NodeShow.vue'),
         props: (route) => ({ nodeUuid: route.params.uuid }),

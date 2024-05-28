@@ -11,15 +11,17 @@ export const useNodeStore = defineStore('NodeStore', () => {
 
   // actions
   const addNode = ({
-    title,
+    title = '',
     content = '',
     resolved = false,
     childNodes = [],
     parentNode = null,
     pomodoroCount = 0,
-  }) => {
+  } = {}) => {
+    const uuid = uuidv4();
+
     nodes.value.push({
-      uuid: uuidv4(),
+      uuid,
       title,
       content,
       resolved,
@@ -27,7 +29,18 @@ export const useNodeStore = defineStore('NodeStore', () => {
       parentNode,
       pomodoroCount,
     });
+
+    return uuid;
   };
 
-  return { nodes, nodesList, addNode };
+  const findNode = (uuid) => nodes.value.find((node) => node.uuid === uuid);
+
+  const addTitleToNode = ({ uuid, title }) => {
+    const node = findNode(uuid);
+    if (!node) return;
+
+    node.title = title;
+  };
+
+  return { nodes, nodesList, addNode, findNode, addTitleToNode };
 });

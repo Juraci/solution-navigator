@@ -94,4 +94,16 @@ describe('NodeStore', () => {
       expect(node).toHaveProperty('title', 'example');
     });
   });
+
+  describe('addContentToNode', () => {
+    it('adds content to a node', () => {
+      const nodeStore = useNodeStore();
+      const uuid = nodeStore.addNode();
+
+      nodeStore.addContentToNode({ uuid, content: 'my content' });
+
+      const node = nodeStore.findNode(uuid);
+      expect(node).toHaveProperty('content', 'my content');
+    });
+  });
 });

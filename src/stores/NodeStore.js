@@ -42,5 +42,12 @@ export const useNodeStore = defineStore('NodeStore', () => {
     node.title = title;
   };
 
-  return { nodes, nodesList, addNode, findNode, addTitleToNode };
+  const addContentToNode = ({ uuid, content }) => {
+    const node = findNode(uuid);
+    if (!node) return;
+
+    node.content = content;
+  };
+
+  return { nodes, nodesList, addNode, findNode, addTitleToNode, addContentToNode };
 });

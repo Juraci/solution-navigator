@@ -1,12 +1,10 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 import { mount } from '@vue/test-utils';
 import NodeShow from '@/views/NodeShow.vue';
 import { createTestingPinia } from '@pinia/testing';
-import { useNodeStore } from '@/stores/NodeStore';
 
 describe('NodeShow', () => {
-  let store = null;
   let node = {
     uuid: '354c62c5-feb1-41a8-828d-4e895ce43886',
     title: 'example',

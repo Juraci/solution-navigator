@@ -37,7 +37,7 @@ const addNode = () => {
 <style scoped>
 .container {
   display: grid;
-  grid-template-columns: minmax(300px, 1fr) 3fr;
+  grid-template-columns: minmax(400px, 1fr) 3fr;
   grid-column-gap: 10px;
 }
 .side-panel {

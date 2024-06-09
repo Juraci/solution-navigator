@@ -26,10 +26,12 @@ const node = toRef(findNode(props.nodeUuid));
     <InputText
       v-if="editingTitle"
       v-model="node.title"
+      autofocus
       data-test-node-title
       type="text"
       @blur="editingTitle = false"
       @focusout="editingTitle = false"
+      @keydown.enter="editingTitle = false"
     />
     <div v-else data-test-node-title @click="editingTitle = true">
       {{ node.title || titlePlaceHolder }}
@@ -40,6 +42,7 @@ const node = toRef(findNode(props.nodeUuid));
       data-test-node-content
       tabindex="0"
       rows="20"
+      autofocus
       @blur="editingContent = false"
       @focusout="editingContent = false"
     />

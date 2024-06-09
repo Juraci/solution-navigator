@@ -14,11 +14,29 @@ const store = useNodeStore();
   >
     <Card data-test-node-item>
       <template #title>
-        {{ node.title }}
+        <div class="node-card-title">
+          {{ node.title }}
+        </div>
       </template>
       <template #content>
-        {{ node.content }}
+        <div class="node-card-content">
+          {{ node.content }}
+        </div>
       </template>
     </Card>
   </router-link>
 </template>
+
+<style scoped>
+.node-card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.node-card-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #a1a1aa;
+}
+</style>

@@ -51,4 +51,14 @@ describe('NodeShow', () => {
       'double click to add content or edit it...',
     );
   });
+
+  describe('when clicking the delete button', () => {
+    it('emits a delete event', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.find('[data-test-node-delete]').trigger('click');
+      expect(wrapper.emitted('delete')).toBeTruthy();
+      expect(wrapper.emitted('delete')[0]).toEqual([node.uuid]);
+    });
+  });
 });

@@ -1,4 +1,5 @@
 <script setup>
+import Button from 'primevue/button';
 import { ref, toRef } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
@@ -11,18 +12,28 @@ const props = defineProps({
   },
 });
 
-const store = useNodeStore();
+defineEmits(['delete']);
+
+const { findNode } = useNodeStore();
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
 const contentPlaceholder = ref('double click to add content or edit it...');
 
-const { findNode } = store;
 const node = toRef(findNode(props.nodeUuid));
 </script>
 
 <template>
   <div class="active-node">
+    <div class="active-node-panel-header">
+      <Button
+        data-test-node-delete
+        icon="pi pi-trash"
+        aria-label="Delete Node"
+        severity="secondary"
+        @click="$emit('delete', node.uuid)"
+      />
+    </div>
     <InputText
       v-if="editingTitle"
       v-model="node.title"
@@ -60,5 +71,9 @@ const node = toRef(findNode(props.nodeUuid));
 }
 .final-content {
   white-space: pre-wrap;
+}
+.active-node-panel-header {
+  display: flex;
+  justify-content: flex-end;
 }
 </style>

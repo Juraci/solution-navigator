@@ -1,16 +1,35 @@
 <script setup>
+import { onMounted } from 'vue';
 import Button from 'primevue/button';
 import NodesArbor from '@/components/NodesArbor.vue';
+import ConfirmDialog from 'primevue/confirmdialog';
 import { useRouter, useRoute } from 'vue-router';
 import { useNodeStore } from '@/stores/NodeStore';
+import { useConfirm } from 'primevue/useconfirm';
 
 const router = useRouter();
 const route = useRoute();
 const store = useNodeStore();
+const confirm = useConfirm();
 
 const addNode = () => {
   const uuid = store.addNode();
   router.push({ name: 'node.show', params: { uuid } });
+};
+
+const deleteConfirmation = (nodeUuid) => {
+  const accept = () => {
+    console.log(`>>>> accepted ${nodeUuid} <<<<<`);
+  };
+  confirm.require({
+    header: 'Delete Confirmation',
+    message: 'Are you sure you want to delete this node?',
+    acceptLabel: 'Yes',
+    rejectLabel: 'No',
+    position: 'topright',
+    accept,
+    reject: () => console.log('>>>> rejected <<<<<'),
+  });
 };
 </script>
 
@@ -29,8 +48,9 @@ const addNode = () => {
       <NodesArbor />
     </div>
     <div class="active-card">
-      <router-view :key="route.path" />
+      <router-view ref="active-node" :key="route.path" @delete="deleteConfirmation" />
     </div>
+    <ConfirmDialog />
   </div>
 </template>
 

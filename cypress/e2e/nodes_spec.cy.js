@@ -1,10 +1,11 @@
 describe('Solution Navigator', () => {
-  it('creates nodes', () => {
+  it('allows the creation of nodes', () => {
     cy.visit('/');
 
     const title = 'Persist the items in the store';
 
     cy.get('[data-test-create-node]').click();
+    cy.get('[data-test-node-item]').should('have.length', 1);
     cy.url().should('include', '/nodes/');
 
     cy.get('[data-test-node-title]').click();
@@ -14,7 +15,16 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-node-content]').dblclick();
     cy.get('[data-test-node-content]').type('Use localstorage for persistence');
 
-    cy.get('[data-test-node-item]').should('have.length', 1);
     cy.get('.p-card').eq(0).find('.p-card-title').should('have.text', title);
+  });
+
+  it('allows the delition of nodes', () => {
+    cy.visit('/');
+    cy.get('[data-test-create-node]').click();
+
+    cy.get('[data-test-node-delete]').click();
+    cy.get('.p-confirm-dialog-accept').click();
+
+    cy.get('[data-test-node-item]').should('have.length', 0);
   });
 });

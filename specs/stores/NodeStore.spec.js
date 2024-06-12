@@ -1,19 +1,30 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { setActivePinia, createPinia } from 'pinia';
+import { describe, it, expect, vi } from 'vitest';
+import { createTestingPinia } from '@pinia/testing';
+import { setActivePinia } from 'pinia';
 import { useNodeStore } from '@/stores/NodeStore';
 
 describe('NodeStore', () => {
-  beforeEach(() => {
-    setActivePinia(createPinia());
-  });
+  function setupPinia(nodes = []) {
+    setActivePinia(
+      createTestingPinia({
+        initialState: {
+          NodeStore: { nodes },
+        },
+        createSpy: vi.fn,
+        stubActions: false,
+      }),
+    );
+  }
 
   it('initializes with correct values', () => {
+    setupPinia();
     const nodeStore = useNodeStore();
     expect(nodeStore.nodes.length).toBe(0);
   });
 
   describe('addNode', () => {
     it('adds nodes', () => {
+      setupPinia();
       const nodeStore = useNodeStore();
 
       expect(nodeStore.nodes.length).toBe(0);
@@ -36,6 +47,7 @@ describe('NodeStore', () => {
     });
 
     it('adds a default empty node when no object is passed', () => {
+      setupPinia();
       const nodeStore = useNodeStore();
 
       const uuid = nodeStore.addNode();
@@ -52,14 +64,16 @@ describe('NodeStore', () => {
 
   describe('nodesList', () => {
     it('lists nodes', () => {
-      const nodeStore = useNodeStore();
-      nodeStore.addNode({
+      const initialNode = {
         title: 'example',
         content: 'my content',
         resolved: false,
         childNodes: [],
         pomodoroCount: 0,
-      });
+      };
+
+      setupPinia([initialNode]);
+      const nodeStore = useNodeStore();
 
       expect(nodeStore.nodesList.length).toBe(1);
       const node = nodeStore.nodesList[0];
@@ -69,14 +83,19 @@ describe('NodeStore', () => {
 
   describe('findNode', () => {
     it('finds a node by uuid', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+      ];
+      setupPinia(initialState);
       const nodeStore = useNodeStore();
-      const uuid = nodeStore.addNode({
-        title: 'example',
-        content: 'my content',
-        resolved: false,
-        childNodes: [],
-        pomodoroCount: 0,
-      });
 
       const node = nodeStore.findNode(uuid);
       expect(node).toHaveProperty('title', 'example');
@@ -85,8 +104,19 @@ describe('NodeStore', () => {
 
   describe('addTitleToNode', () => {
     it('adds a title to a node', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+      ];
+      setupPinia(initialState);
       const nodeStore = useNodeStore();
-      const uuid = nodeStore.addNode();
 
       nodeStore.addTitleToNode({ uuid, title: 'example' });
 
@@ -97,13 +127,78 @@ describe('NodeStore', () => {
 
   describe('addContentToNode', () => {
     it('adds content to a node', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+      ];
+
+      setupPinia(initialState);
       const nodeStore = useNodeStore();
-      const uuid = nodeStore.addNode();
 
       nodeStore.addContentToNode({ uuid, content: 'my content' });
 
       const node = nodeStore.findNode(uuid);
       expect(node).toHaveProperty('content', 'my content');
+    });
+  });
+
+  describe('deleteNode', () => {
+    it('deletes a node and all its children', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: ['370d2e0f-2f8c-4c48-b874-13a88ef65503'],
+          pomodoroCount: 0,
+        },
+        {
+          uuid: '370d2e0f-2f8c-4c48-b874-13a88ef65503',
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: uuid,
+          childNodes: [
+            '67aa7e46-1a7c-4f03-8f19-04dc20ba0a95',
+            'a46df82c-eea1-4365-8e4b-9c0d471c2906',
+          ],
+          pomodoroCount: 0,
+        },
+        {
+          uuid: '67aa7e46-1a7c-4f03-8f19-04dc20ba0a95',
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: '370d2e0f-2f8c-4c48-b874-13a88ef65503',
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+        {
+          uuid: 'a46df82c-eea1-4365-8e4b-9c0d471c2906',
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: '370d2e0f-2f8c-4c48-b874-13a88ef65503',
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      nodeStore.deleteNode(uuid);
+
+      expect(nodeStore.nodes.length).toBe(0);
     });
   });
 });

@@ -49,5 +49,25 @@ export const useNodeStore = defineStore('NodeStore', () => {
     node.content = content;
   };
 
-  return { nodes, nodesList, addNode, findNode, addTitleToNode, addContentToNode };
+  const deleteNode = (uuid) => {
+    const node = findNode(uuid);
+
+    if (node.childNodes.length > 0) {
+      node.childNodes.forEach((childUuid) => {
+        deleteNode(childUuid);
+      });
+    }
+
+    nodes.value = nodes.value.filter((n) => n.uuid !== uuid);
+  };
+
+  return {
+    nodes,
+    nodesList,
+    addNode,
+    findNode,
+    addTitleToNode,
+    addContentToNode,
+    deleteNode,
+  };
 });

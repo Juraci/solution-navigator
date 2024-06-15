@@ -8,17 +8,18 @@ import { useConfirm } from 'primevue/useconfirm';
 
 const router = useRouter();
 const route = useRoute();
-const store = useNodeStore();
+const { addNode, deleteNode } = useNodeStore();
 const confirm = useConfirm();
 
-const addNode = () => {
-  const uuid = store.addNode();
+const handleAddNode = () => {
+  const uuid = addNode();
   router.push({ name: 'node.show', params: { uuid } });
 };
 
 const deleteConfirmation = (nodeUuid) => {
   const accept = () => {
-    console.log(`>>>> accepted ${nodeUuid} <<<<<`);
+    router.push({ name: 'nodes.index' });
+    deleteNode(nodeUuid);
   };
   confirm.require({
     header: 'Delete Confirmation',
@@ -41,7 +42,7 @@ const deleteConfirmation = (nodeUuid) => {
           icon="pi pi-pen-to-square"
           aria-label="Create Node"
           severity="secondary"
-          @click="addNode"
+          @click="handleAddNode"
         />
       </div>
       <NodesArbor />

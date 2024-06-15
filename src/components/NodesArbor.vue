@@ -1,8 +1,10 @@
 <script setup>
 import Card from 'primevue/card';
 import { useNodeStore } from '@/stores/NodeStore';
+import { storeToRefs } from 'pinia';
 
-const { nodesList } = useNodeStore();
+const store = useNodeStore();
+const { nodesList } = storeToRefs(store);
 </script>
 
 <template>

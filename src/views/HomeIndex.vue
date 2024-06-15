@@ -1,5 +1,4 @@
 <script setup>
-import { onMounted } from 'vue';
 import Button from 'primevue/button';
 import NodesArbor from '@/components/NodesArbor.vue';
 import ConfirmDialog from 'primevue/confirmdialog';

@@ -27,4 +27,12 @@ describe('Solution Navigator', () => {
 
     cy.get('[data-test-node-item]').should('have.length', 0);
   });
+
+  context('when the node does not exist', () => {
+    it('displays a not found message and a link back to home', () => {
+      cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');
+
+      cy.get('[data-test-node-not-found-message]').should('have.text', 'Node not found');
+    });
+  });
 });

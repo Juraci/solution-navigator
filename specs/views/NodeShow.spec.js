@@ -61,4 +61,12 @@ describe('NodeShow', () => {
       expect(wrapper.emitted('delete')[0]).toEqual([node.uuid]);
     });
   });
+
+  describe('when the node does not exist', () => {
+    it('emits a node not found event', () => {
+      const wrapper = createWrapper([]);
+
+      expect(wrapper.emitted('nodeNotFound')).toBeTruthy();
+    });
+  });
 });

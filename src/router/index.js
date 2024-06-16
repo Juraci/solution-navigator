@@ -13,6 +13,11 @@ const routes = [
         component: () => import('@/views/NodeShow.vue'),
         props: (route) => ({ nodeUuid: route.params.uuid }),
       },
+      {
+        path: 'nodes/node-not-found',
+        name: 'node.not-found',
+        component: () => import('@/views/NodeNotFound.vue'),
+      },
     ],
   },
   {
@@ -25,6 +30,11 @@ const routes = [
         name: 'node.show',
         component: () => import('@/views/NodeShow.vue'),
         props: (route) => ({ nodeUuid: route.params.uuid }),
+      },
+      {
+        path: 'node-not-found',
+        name: 'node.not-found',
+        component: () => import('@/views/NodeNotFound.vue'),
       },
     ],
   },

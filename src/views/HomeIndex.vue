@@ -31,6 +31,10 @@ const deleteConfirmation = (nodeUuid) => {
     reject: () => console.log('>>>> rejected <<<<<'),
   });
 };
+
+const handleNodeNotFound = () => {
+  router.push({ name: 'node.not-found' });
+};
 </script>
 
 <template>
@@ -48,7 +52,12 @@ const deleteConfirmation = (nodeUuid) => {
       <NodesArbor />
     </div>
     <div class="active-card">
-      <router-view ref="active-node" :key="route.path" @delete="deleteConfirmation" />
+      <router-view
+        ref="active-node"
+        :key="route.path"
+        @delete="deleteConfirmation"
+        @node-not-found="handleNodeNotFound"
+      />
     </div>
     <ConfirmDialog />
   </div>

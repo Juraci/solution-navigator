@@ -12,7 +12,7 @@ const props = defineProps({
   },
 });
 
-defineEmits(['delete']);
+const emit = defineEmits(['delete', 'nodeNotFound']);
 
 const { findNode } = useNodeStore();
 const editingTitle = ref(false);
@@ -21,17 +21,19 @@ const titlePlaceHolder = ref('add a title...');
 const contentPlaceholder = ref('double click to add content or edit it...');
 
 const node = toRef(findNode(props.nodeUuid));
+
+if (!node.value) emit('nodeNotFound');
 </script>
 
 <template>
-  <div class="active-node">
+  <div v-if="node" class="active-node">
     <div class="active-node-panel-header">
       <Button
         data-test-node-delete
         icon="pi pi-trash"
         aria-label="Delete Node"
         severity="secondary"
-        @click="$emit('delete', node.uuid)"
+        @click="emit('delete', node.uuid)"
       />
     </div>
     <InputText

@@ -2,7 +2,6 @@ import { describe, it, expect, vi } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 import { setActivePinia } from 'pinia';
 import { useNodeStore } from '@/stores/NodeStore';
-import { onUpdated } from 'vue';
 
 describe('NodeStore', () => {
   function setupPinia(nodes = []) {

@@ -28,7 +28,7 @@ const deleteConfirmation = (nodeUuid) => {
     rejectLabel: 'No',
     position: 'topright',
     accept,
-    reject: () => console.log('>>>> rejected <<<<<'),
+    reject: () => {},
   });
 };
 

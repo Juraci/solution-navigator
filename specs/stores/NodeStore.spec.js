@@ -2,6 +2,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { createTestingPinia } from '@pinia/testing';
 import { setActivePinia } from 'pinia';
 import { useNodeStore } from '@/stores/NodeStore';
+import { onUpdated } from 'vue';
 
 describe('NodeStore', () => {
   function setupPinia(nodes = []) {
@@ -44,6 +45,8 @@ describe('NodeStore', () => {
       expect(node).toHaveProperty('resolved', false);
       expect(node).toHaveProperty('childNodes', []);
       expect(node).toHaveProperty('pomodoroCount', 0);
+      expect(node).toHaveProperty('createdAt');
+      expect(node).toHaveProperty('updatedAt');
     });
 
     it('adds a default empty node when no object is passed', () => {
@@ -63,21 +66,39 @@ describe('NodeStore', () => {
   });
 
   describe('nodesList', () => {
-    it('lists nodes', () => {
-      const initialNode = {
-        title: 'example',
-        content: 'my content',
-        resolved: false,
-        childNodes: [],
-        pomodoroCount: 0,
-      };
+    it('lists nodes ordered by updatedAt', () => {
+      const oldNode = '2022-06-16T21:59:54.858Z';
+      const newNode = '2023-06-16T21:59:54.858Z';
 
-      setupPinia([initialNode]);
+      const initialState = [
+        {
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: oldNode,
+          updatedAt: oldNode,
+        },
+        {
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: newNode,
+          updatedAt: newNode,
+        },
+      ];
+
+      setupPinia(initialState);
       const nodeStore = useNodeStore();
 
-      expect(nodeStore.nodesList.length).toBe(1);
-      const node = nodeStore.nodesList[0];
-      expect(node).toHaveProperty('title', 'example');
+      expect(nodeStore.nodesList.length).toBe(2);
+      const firstNode = nodeStore.nodesList[0];
+      expect(firstNode).toHaveProperty('updatedAt', newNode);
+      const secondNode = nodeStore.nodesList[1];
+      expect(secondNode).toHaveProperty('updatedAt', oldNode);
     });
   });
 
@@ -105,6 +126,8 @@ describe('NodeStore', () => {
   describe('addTitleToNode', () => {
     it('adds a title to a node', () => {
       const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const oldDate = '2020-06-16T21:59:54.858Z';
+
       const initialState = [
         {
           uuid,
@@ -113,6 +136,8 @@ describe('NodeStore', () => {
           resolved: false,
           childNodes: [],
           pomodoroCount: 0,
+          createdAt: oldDate,
+          updatedAt: oldDate,
         },
       ];
       setupPinia(initialState);
@@ -122,12 +147,14 @@ describe('NodeStore', () => {
 
       const node = nodeStore.findNode(uuid);
       expect(node).toHaveProperty('title', 'example');
+      expect(Date.parse(node.updatedAt)).toBeGreaterThan(Date.parse(oldDate));
     });
   });
 
   describe('addContentToNode', () => {
     it('adds content to a node', () => {
       const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const oldDate = '2020-06-16T21:59:54.858Z';
       const initialState = [
         {
           uuid,
@@ -136,6 +163,8 @@ describe('NodeStore', () => {
           resolved: false,
           childNodes: [],
           pomodoroCount: 0,
+          createdAt: oldDate,
+          updatedAt: oldDate,
         },
       ];
 
@@ -146,6 +175,7 @@ describe('NodeStore', () => {
 
       const node = nodeStore.findNode(uuid);
       expect(node).toHaveProperty('content', 'my content');
+      expect(Date.parse(node.updatedAt)).toBeGreaterThan(Date.parse(oldDate));
     });
   });
 
@@ -199,6 +229,34 @@ describe('NodeStore', () => {
       nodeStore.deleteNode(uuid);
 
       expect(nodeStore.nodes.length).toBe(0);
+    });
+  });
+
+  describe('refreshUpdatedAt', () => {
+    it('updates the updatedAt property of a node', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const oldDate = '2020-06-16T21:59:54.858Z';
+
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: oldDate,
+          updatedAt: oldDate,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      nodeStore.refreshUpdatedAt(uuid);
+
+      const node = nodeStore.findNode(uuid);
+      expect(Date.parse(node.updatedAt)).toBeGreaterThan(Date.parse(oldDate));
     });
   });
 });

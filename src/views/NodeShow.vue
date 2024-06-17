@@ -1,6 +1,6 @@
 <script setup>
 import Button from 'primevue/button';
-import { ref, toRef } from 'vue';
+import { ref, toRef, watch } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import { useNodeStore } from '@/stores/NodeStore';
@@ -14,7 +14,7 @@ const props = defineProps({
 
 const emit = defineEmits(['delete', 'nodeNotFound']);
 
-const { findNode } = useNodeStore();
+const { findNode, refreshUpdatedAt } = useNodeStore();
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
@@ -23,6 +23,10 @@ const contentPlaceholder = ref('double click to add content or edit it...');
 const node = toRef(findNode(props.nodeUuid));
 
 if (!node.value) emit('nodeNotFound');
+
+watch(node.value, () => {
+  refreshUpdatedAt(node.value.uuid);
+});
 </script>
 
 <template>

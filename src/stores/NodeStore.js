@@ -7,7 +7,9 @@ export const useNodeStore = defineStore('NodeStore', () => {
   const nodes = ref([]);
 
   // getters
-  const nodesList = computed(() => nodes.value);
+  const nodesList = computed(() => {
+    return nodes.value.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+  });
 
   // actions
   const addNode = ({
@@ -19,6 +21,7 @@ export const useNodeStore = defineStore('NodeStore', () => {
     pomodoroCount = 0,
   } = {}) => {
     const uuid = uuidv4();
+    const now = new Date().toISOString();
 
     nodes.value.push({
       uuid,
@@ -28,6 +31,8 @@ export const useNodeStore = defineStore('NodeStore', () => {
       childNodes,
       parentNode,
       pomodoroCount,
+      createdAt: now,
+      updatedAt: now,
     });
 
     return uuid;
@@ -40,6 +45,7 @@ export const useNodeStore = defineStore('NodeStore', () => {
     if (!node) return;
 
     node.title = title;
+    node.updatedAt = new Date().toISOString();
   };
 
   const addContentToNode = ({ uuid, content }) => {
@@ -47,6 +53,7 @@ export const useNodeStore = defineStore('NodeStore', () => {
     if (!node) return;
 
     node.content = content;
+    node.updatedAt = new Date().toISOString();
   };
 
   const deleteNode = (uuid) => {
@@ -61,6 +68,13 @@ export const useNodeStore = defineStore('NodeStore', () => {
     nodes.value = nodes.value.filter((n) => n.uuid !== uuid);
   };
 
+  const refreshUpdatedAt = (uuid) => {
+    const node = findNode(uuid);
+    if (!node) return;
+
+    node.updatedAt = new Date().toISOString();
+  };
+
   return {
     nodes,
     nodesList,
@@ -69,5 +83,6 @@ export const useNodeStore = defineStore('NodeStore', () => {
     addTitleToNode,
     addContentToNode,
     deleteNode,
+    refreshUpdatedAt,
   };
 });

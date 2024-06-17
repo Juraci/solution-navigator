@@ -1,6 +1,6 @@
 <script setup>
 import Button from 'primevue/button';
-import { ref, toRef, watch } from 'vue';
+import { ref, reactive, watch } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
@@ -21,13 +21,17 @@ const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
 const contentPlaceholder = ref('double click to add content or edit it...');
 
-const node = toRef(findNode(props.nodeUuid));
+const node = findNode(props.nodeUuid);
 
-if (!node.value) emit('nodeNotFound');
+if (node) {
+  reactive(node);
 
-watch(node.value, () => {
-  refreshUpdatedAt(node.value.uuid);
-});
+  watch(node, () => {
+    refreshUpdatedAt(node.uuid);
+  });
+} else {
+  emit('nodeNotFound');
+}
 </script>
 
 <template>

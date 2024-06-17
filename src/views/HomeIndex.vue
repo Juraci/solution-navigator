@@ -73,6 +73,9 @@ const handleNodeNotFound = () => {
   display: flex;
   flex-direction: column;
   gap: 10px;
+  height: 100%;
+  max-height: 98vh;
+  overflow: auto;
 }
 .side-panel-header {
   display: flex;

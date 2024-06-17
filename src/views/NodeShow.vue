@@ -3,6 +3,7 @@ import Button from 'primevue/button';
 import { ref, toRef, watch } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
+import Divider from 'primevue/divider';
 import { useNodeStore } from '@/stores/NodeStore';
 
 const props = defineProps({
@@ -49,10 +50,12 @@ watch(node.value, () => {
       @blur="editingTitle = false"
       @focusout="editingTitle = false"
       @keydown.enter="editingTitle = false"
+      @keydown.esc="editingTitle = false"
     />
     <div v-else data-test-node-title @click="editingTitle = true">
       {{ node.title || titlePlaceHolder }}
     </div>
+    <Divider />
     <Textarea
       v-if="editingContent"
       v-model="node.content"
@@ -66,6 +69,7 @@ watch(node.value, () => {
     <div v-else data-test-node-content class="final-content" @dblclick="editingContent = true">
       {{ node.content || contentPlaceholder }}
     </div>
+    <Divider />
   </div>
 </template>
 
@@ -77,6 +81,10 @@ watch(node.value, () => {
 }
 .final-content {
   white-space: pre-wrap;
+  min-height: 400px;
+  max-height: 400px;
+  height: 100%;
+  overflow: auto;
 }
 .active-node-panel-header {
   display: flex;

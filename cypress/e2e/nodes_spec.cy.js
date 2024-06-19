@@ -18,7 +18,7 @@ describe('Solution Navigator', () => {
     cy.get('.p-card').eq(0).find('.p-card-title').should('have.text', title);
   });
 
-  it('allows the delition of nodes', () => {
+  it('allows the deletion of nodes', () => {
     cy.visit('/');
     cy.get('[data-test-create-node]').click();
 

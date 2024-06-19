@@ -17,7 +17,7 @@
   align-items: center;
 }
 .not-found-icon {
-  margin-top: 50%;
+  margin-top: 30%;
   color: #a1a1aa;
 }
 .not-found-message {

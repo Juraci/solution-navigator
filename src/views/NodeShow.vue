@@ -69,6 +69,7 @@ if (node) {
       autofocus
       @blur="editingContent = false"
       @focusout="editingContent = false"
+      @keydown.esc="editingContent = false"
     />
     <div v-else data-test-node-content class="final-content" @dblclick="editingContent = true">
       {{ node.content || contentPlaceholder }}

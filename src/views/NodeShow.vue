@@ -5,6 +5,7 @@ import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
 import { useNodeStore } from '@/stores/NodeStore';
+import ChildNode from '@/components/ChildNode.vue';
 
 const props = defineProps({
   nodeUuid: {
@@ -15,7 +16,7 @@ const props = defineProps({
 
 const emit = defineEmits(['delete', 'nodeNotFound']);
 
-const { findNode, refreshUpdatedAt } = useNodeStore();
+const { findNode, refreshUpdatedAt, addChildNode } = useNodeStore();
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
@@ -75,6 +76,23 @@ if (node) {
       {{ node.content || contentPlaceholder }}
     </div>
     <Divider />
+    <div class="child-nodes-actions">
+      <Button
+        data-test-node-add-child-node
+        label="Add child node"
+        icon="pi pi-plus-circle"
+        severity="secondary"
+        aria-label="Add child node"
+        rounded
+        @click="addChildNode(node.uuid)"
+      />
+    </div>
+    <ChildNode
+      v-for="childNodeUuid in node.childNodes"
+      :key="childNodeUuid"
+      :node-uuid="childNodeUuid"
+      :parent-node-uuid="node.uuid"
+    />
   </div>
 </template>
 
@@ -94,5 +112,10 @@ if (node) {
 .active-node-panel-header {
   display: flex;
   justify-content: flex-end;
+}
+.child-nodes-actions {
+  display: flex;
+  justify-content: flex-start;
+  gap: 0.5rem;
 }
 </style>

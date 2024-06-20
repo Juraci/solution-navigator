@@ -38,6 +38,16 @@ export const useNodeStore = defineStore('NodeStore', () => {
     return uuid;
   };
 
+  const addChildNode = (parentNodeUuid) => {
+    const parentNode = findNode(parentNodeUuid);
+
+    if (!parentNode) return;
+    const childUuid = addNode({ parentNode: parentNode.uuid });
+    parentNode.childNodes.push(childUuid);
+
+    return childUuid;
+  };
+
   const findNode = (uuid) => nodes.value.find((node) => node.uuid === uuid);
 
   const addTitleToNode = ({ uuid, title }) => {
@@ -79,6 +89,7 @@ export const useNodeStore = defineStore('NodeStore', () => {
     nodes,
     nodesList,
     addNode,
+    addChildNode,
     findNode,
     addTitleToNode,
     addContentToNode,

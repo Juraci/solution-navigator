@@ -28,6 +28,23 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-node-item]').should('have.length', 0);
   });
 
+  it('allows the creation of nodes within nodes', () => {
+    cy.visit('/');
+
+    cy.get('[data-test-create-node]').click();
+
+    cy.get('[data-test-node-add-child-node]').click();
+
+    cy.get('[data-test-child-node-item]').should('have.length', 1);
+
+    cy.get('[data-test-child-node-item]').within(() => {
+      cy.get('[data-test-child-node-edit]').click();
+      cy.get('[data-test-child-node-title]').type('This is a sub task');
+      cy.get('[data-test-child-node-title]').type('{enter}');
+      cy.get('[data-test-child-node-title]').should('have.text', 'This is a sub task');
+    });
+  });
+
   context('when the node does not exist', () => {
     it('displays a not found message and a link back to home', () => {
       cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');

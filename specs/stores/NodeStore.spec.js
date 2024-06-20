@@ -258,4 +258,43 @@ describe('NodeStore', () => {
       expect(Date.parse(node.updatedAt)).toBeGreaterThan(Date.parse(oldDate));
     });
   });
+
+  describe('addChildNode', () => {
+    it('adds a child node to a parent node', () => {
+      const parentNodeUuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid: parentNodeUuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      const childNodeUuid = nodeStore.addChildNode(parentNodeUuid);
+
+      const node = nodeStore.findNode(parentNodeUuid);
+      expect(node).toHaveProperty('childNodes', [childNodeUuid]);
+
+      const childNode = nodeStore.findNode(childNodeUuid);
+      expect(childNode).toHaveProperty('parentNode', parentNodeUuid);
+    });
+
+    it('does nothing if the parent node does not exist', () => {
+      const parentNodeUuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      nodeStore.addChildNode(parentNodeUuid);
+
+      expect(nodeStore.nodes.length).toBe(0);
+    });
+  });
 });

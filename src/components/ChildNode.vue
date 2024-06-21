@@ -15,9 +15,13 @@ const props = defineProps({
     type: String,
     default: '',
   },
+  level: {
+    type: Number,
+    default: 0,
+  },
 });
 
-const { findNode } = useNodeStore();
+const { findNode, addChildNode } = useNodeStore();
 const editing = ref(false);
 const checked = ref(false);
 
@@ -26,7 +30,7 @@ reactive(node);
 </script>
 
 <template>
-  <div data-test-child-node-item>
+  <div :style="{ 'margin-left': level * 1 + 'rem' }" data-test-child-node-item>
     <span v-if="editing" class="inline-flex items-center gap-2">
       <InputText
         v-model="node.title"
@@ -54,9 +58,25 @@ reactive(node);
           aria-label="edit"
           @click="editing = true"
         />
+        <Button
+          data-test-child-node-add-child-node
+          icon="pi pi-plus"
+          text
+          raised
+          rounded
+          aria-label="add child node"
+          @click="addChildNode(nodeUuid)"
+        />
       </div>
     </Chip>
   </div>
+  <ChildNode
+    v-for="childNodeUuid in node.childNodes"
+    :key="childNodeUuid"
+    :node-uuid="childNodeUuid"
+    :parent-node-uuid="node.uuid"
+    :level="level + 1"
+  />
 </template>
 
 <style>

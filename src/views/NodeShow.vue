@@ -92,6 +92,7 @@ if (node) {
       :key="childNodeUuid"
       :node-uuid="childNodeUuid"
       :parent-node-uuid="node.uuid"
+      :level="0"
     />
   </div>
 </template>

@@ -52,6 +52,49 @@ describe('NodeShow', () => {
     );
   });
 
+  describe('when the node has child nodes', () => {
+    it.skip('renders the child nodes', () => {
+      const childNodes = [
+        {
+          uuid: '26656fbd-581e-4034-9339-fe1206d95778',
+          parentNode: '354c62c5-feb1-41a8-828d-4e895ce43886',
+          title: 'first child node lvl 1',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: '2023-06-16T21:59:54.858Z',
+          updatedAt: '2023-06-16T21:59:54.858Z',
+        },
+        {
+          uuid: 'd4d6bebc-f377-48dc-b92a-1e4e2e407c01',
+          parentNode: '354c62c5-feb1-41a8-828d-4e895ce43886',
+          title: 'second child node lvl 1',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: '2023-06-16T21:59:54.858Z',
+          updatedAt: '2023-06-16T21:59:54.858Z',
+        },
+      ];
+
+      const wrapper = createWrapper([
+        { ...node, childNodes: childNodes.map((n) => n.uuid) },
+        ...childNodes,
+      ]);
+      const renderedChildNodes = wrapper.findAll('[data-test-child-node-item]');
+
+      expect(renderedChildNodes.count).toEqual(2);
+      expect(renderedChildNodes.at(0).find('[data-test-child-node-title]').text()).toEqual(
+        childNodes[0].title,
+      );
+      expect(renderedChildNodes.at(1).find('[data-test-child-node-title]').text()).toEqual(
+        childNodes[1].title,
+      );
+    });
+  });
+
   describe('when clicking the delete button', () => {
     it('emits a delete event', async () => {
       const wrapper = createWrapper();

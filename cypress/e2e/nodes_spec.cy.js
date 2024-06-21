@@ -42,7 +42,18 @@ describe('Solution Navigator', () => {
       cy.get('[data-test-child-node-title]').type('This is a sub task');
       cy.get('[data-test-child-node-title]').type('{enter}');
       cy.get('[data-test-child-node-title]').should('have.text', 'This is a sub task');
+      cy.get('[data-test-child-node-add-child-node]').click();
     });
+
+    cy.get('[data-test-child-node-item]').should('have.length', 2);
+    cy.get('[data-test-child-node-item]')
+      .eq(1)
+      .within(() => {
+        cy.get('[data-test-child-node-edit]').click();
+        cy.get('[data-test-child-node-title]').type('This is a sub task lvl 2');
+        cy.get('[data-test-child-node-title]').type('{enter}');
+        cy.get('[data-test-child-node-title]').should('have.text', 'This is a sub task lvl 2');
+      });
   });
 
   context('when the node does not exist', () => {

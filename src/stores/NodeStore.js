@@ -75,6 +75,10 @@ export const useNodeStore = defineStore('NodeStore', () => {
       });
     }
 
+    if (node.parentNode) {
+      const parentNode = findNode(node.parentNode);
+      parentNode.childNodes = parentNode.childNodes.filter((nUuid) => nUuid !== uuid);
+    }
     nodes.value = nodes.value.filter((n) => n.uuid !== uuid);
   };
 

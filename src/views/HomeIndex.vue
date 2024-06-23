@@ -51,14 +51,12 @@ const handleNodeNotFound = () => {
       </div>
       <NodesArbor />
     </div>
-    <div class="active-card">
-      <router-view
-        ref="active-node"
-        :key="route.path"
-        @delete="deleteConfirmation"
-        @node-not-found="handleNodeNotFound"
-      />
-    </div>
+    <router-view
+      ref="active-node"
+      :key="route.path"
+      @delete="deleteConfirmation"
+      @node-not-found="handleNodeNotFound"
+    />
     <ConfirmDialog />
   </div>
 </template>

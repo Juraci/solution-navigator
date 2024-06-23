@@ -179,55 +179,71 @@ describe('NodeStore', () => {
   });
 
   describe('deleteNode', () => {
-    it('deletes a node and all its children', () => {
-      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
-      const initialState = [
-        {
-          uuid,
-          title: 'example',
-          content: 'my content',
-          resolved: false,
-          childNodes: ['370d2e0f-2f8c-4c48-b874-13a88ef65503'],
-          pomodoroCount: 0,
-        },
-        {
-          uuid: '370d2e0f-2f8c-4c48-b874-13a88ef65503',
-          title: 'example 2',
-          content: 'my content 2',
-          resolved: false,
-          parentNode: uuid,
-          childNodes: [
-            '67aa7e46-1a7c-4f03-8f19-04dc20ba0a95',
-            'a46df82c-eea1-4365-8e4b-9c0d471c2906',
-          ],
-          pomodoroCount: 0,
-        },
-        {
-          uuid: '67aa7e46-1a7c-4f03-8f19-04dc20ba0a95',
-          title: 'example 2',
-          content: 'my content 2',
-          resolved: false,
-          parentNode: '370d2e0f-2f8c-4c48-b874-13a88ef65503',
-          childNodes: [],
-          pomodoroCount: 0,
-        },
-        {
-          uuid: 'a46df82c-eea1-4365-8e4b-9c0d471c2906',
-          title: 'example 2',
-          content: 'my content 2',
-          resolved: false,
-          parentNode: '370d2e0f-2f8c-4c48-b874-13a88ef65503',
-          childNodes: [],
-          pomodoroCount: 0,
-        },
-      ];
+    const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+    const parentNodeUuid = '370d2e0f-2f8c-4c48-b874-13a88ef65503';
+    const nodeUuidToDelete = '67aa7e46-1a7c-4f03-8f19-04dc20ba0a95';
+    const initialState = [
+      {
+        uuid,
+        title: 'example',
+        content: 'my content',
+        resolved: false,
+        childNodes: ['370d2e0f-2f8c-4c48-b874-13a88ef65503'],
+        pomodoroCount: 0,
+      },
+      {
+        uuid: parentNodeUuid,
+        title: 'example 2',
+        content: 'my content 2',
+        resolved: false,
+        parentNode: uuid,
+        childNodes: [
+          '67aa7e46-1a7c-4f03-8f19-04dc20ba0a95',
+          'a46df82c-eea1-4365-8e4b-9c0d471c2906',
+        ],
+        pomodoroCount: 0,
+      },
+      {
+        uuid: nodeUuidToDelete,
+        title: 'example 2',
+        content: 'my content 2',
+        resolved: false,
+        parentNode: parentNodeUuid,
+        childNodes: [],
+        pomodoroCount: 0,
+      },
+      {
+        uuid: 'a46df82c-eea1-4365-8e4b-9c0d471c2906',
+        title: 'example 2',
+        content: 'my content 2',
+        resolved: false,
+        parentNode: parentNodeUuid,
+        childNodes: [],
+        pomodoroCount: 0,
+      },
+    ];
 
+    it('deletes a node and all its children', () => {
       setupPinia(initialState);
       const nodeStore = useNodeStore();
 
       nodeStore.deleteNode(uuid);
 
       expect(nodeStore.nodes.length).toBe(0);
+    });
+
+    describe('when the node has a parent node', () => {
+      it('removes itself from the parent node before deleting', () => {
+        setupPinia(initialState);
+        const nodeStore = useNodeStore();
+
+        nodeStore.deleteNode(nodeUuidToDelete);
+
+        expect(nodeStore.nodes.length).toBe(3);
+
+        const node = nodeStore.findNode(parentNodeUuid);
+        expect(node.childNodes).not.toContain(nodeUuidToDelete);
+      });
     });
   });
 

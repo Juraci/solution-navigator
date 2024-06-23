@@ -102,6 +102,8 @@ if (node) {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: 98vh;
+  overflow: auto;
 }
 .final-content {
   white-space: pre-wrap;

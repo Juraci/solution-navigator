@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, watch } from 'vue';
 import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
 import Chip from 'primevue/chip';
@@ -21,12 +21,15 @@ const props = defineProps({
   },
 });
 
-const { findNode, addChildNode } = useNodeStore();
+const { findNode, addChildNode, deleteNode, refreshUpdatedAt } = useNodeStore();
 const editing = ref(false);
 const checked = ref(false);
 
 const node = findNode(props.nodeUuid);
 reactive(node);
+watch(node, () => {
+  refreshUpdatedAt(node.uuid);
+});
 </script>
 
 <template>
@@ -58,6 +61,16 @@ reactive(node);
           aria-label="edit"
           @click="editing = true"
         />
+        <router-link :key="node.uuid" :to="`/nodes/${node.uuid}`">
+          <Button
+            data-test-child-node-show
+            icon="pi pi-search-plus"
+            text
+            raised
+            rounded
+            aria-label="show node"
+          />
+        </router-link>
         <Button
           data-test-child-node-add-child-node
           icon="pi pi-plus"
@@ -66,6 +79,15 @@ reactive(node);
           rounded
           aria-label="add child node"
           @click="addChildNode(nodeUuid)"
+        />
+        <Button
+          data-test-child-node-delete
+          icon="pi pi-times"
+          text
+          raised
+          rounded
+          aria-label="add child node"
+          @click="deleteNode(nodeUuid)"
         />
       </div>
     </Chip>

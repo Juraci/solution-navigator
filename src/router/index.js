@@ -5,20 +5,7 @@ const routes = [
   {
     path: '/',
     name: 'index',
-    component: HomeIndex,
-    children: [
-      {
-        path: 'nodes/:uuid',
-        name: 'node.show',
-        component: () => import('@/views/NodeShow.vue'),
-        props: (route) => ({ nodeUuid: route.params.uuid }),
-      },
-      {
-        path: 'nodes/node-not-found',
-        name: 'node.not-found',
-        component: () => import('@/views/NodeNotFound.vue'),
-      },
-    ],
+    redirect: { name: 'nodes.index' },
   },
   {
     path: '/nodes',

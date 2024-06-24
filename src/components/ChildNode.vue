@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch } from 'vue';
+import { reactive, ref, watch, computed } from 'vue';
 import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
 import Chip from 'primevue/chip';
@@ -24,7 +24,6 @@ const props = defineProps({
 const { findNode, addChildNode, deleteNode, refreshUpdatedAt, enforceNodeTreeConsistency } =
   useNodeStore();
 const editing = ref(false);
-const checked = ref(false);
 
 const node = findNode(props.nodeUuid);
 if (node) {
@@ -35,6 +34,10 @@ if (node) {
 } else {
   enforceNodeTreeConsistency();
 }
+
+const childNodes = computed(() => {
+  return node ? node.childNodes : [];
+});
 </script>
 
 <template>
@@ -52,7 +55,7 @@ if (node) {
       />
     </span>
     <Chip v-else>
-      <Checkbox v-model="checked" :binary="true" />
+      <Checkbox v-model="node.resolved" :binary="true" />
       <div data-test-child-node-title class="chip-title">
         {{ node.title || 'add a title' }}
       </div>
@@ -97,15 +100,13 @@ if (node) {
       </div>
     </Chip>
   </div>
-  <div v-if="node">
-    <ChildNode
-      v-for="childNodeUuid in node.childNodes"
-      :key="childNodeUuid"
-      :node-uuid="childNodeUuid"
-      :parent-node-uuid="node.uuid"
-      :level="level + 1"
-    />
-  </div>
+  <ChildNode
+    v-for="childNodeUuid in childNodes"
+    :key="childNodeUuid"
+    :node-uuid="childNodeUuid"
+    :parent-node-uuid="node.uuid"
+    :level="level + 1"
+  />
 </template>
 
 <style>

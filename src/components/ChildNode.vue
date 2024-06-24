@@ -21,19 +21,24 @@ const props = defineProps({
   },
 });
 
-const { findNode, addChildNode, deleteNode, refreshUpdatedAt } = useNodeStore();
+const { findNode, addChildNode, deleteNode, refreshUpdatedAt, enforceNodeTreeConsistency } =
+  useNodeStore();
 const editing = ref(false);
 const checked = ref(false);
 
 const node = findNode(props.nodeUuid);
-reactive(node);
-watch(node, () => {
-  refreshUpdatedAt(node.uuid);
-});
+if (node) {
+  reactive(node);
+  watch(node, () => {
+    refreshUpdatedAt(node.uuid);
+  });
+} else {
+  enforceNodeTreeConsistency();
+}
 </script>
 
 <template>
-  <div :style="{ 'margin-left': level * 1 + 'rem' }" data-test-child-node-item>
+  <div v-if="node" :style="{ 'margin-left': level * 1 + 'rem' }" data-test-child-node-item>
     <span v-if="editing" class="inline-flex items-center gap-2">
       <InputText
         v-model="node.title"
@@ -92,13 +97,15 @@ watch(node, () => {
       </div>
     </Chip>
   </div>
-  <ChildNode
-    v-for="childNodeUuid in node.childNodes"
-    :key="childNodeUuid"
-    :node-uuid="childNodeUuid"
-    :parent-node-uuid="node.uuid"
-    :level="level + 1"
-  />
+  <div v-if="node">
+    <ChildNode
+      v-for="childNodeUuid in node.childNodes"
+      :key="childNodeUuid"
+      :node-uuid="childNodeUuid"
+      :parent-node-uuid="node.uuid"
+      :level="level + 1"
+    />
+  </div>
 </template>
 
 <style>

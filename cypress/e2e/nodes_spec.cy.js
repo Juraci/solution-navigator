@@ -39,7 +39,7 @@ describe('Solution Navigator', () => {
     ],
   };
 
-  it('allows the creation of nodes', () => {
+  it('creates nodes', () => {
     cy.visit('/');
 
     const title = 'Persist the items in the store';
@@ -58,7 +58,7 @@ describe('Solution Navigator', () => {
     cy.get('.p-card').eq(0).find('.p-card-title').should('have.text', title);
   });
 
-  it('allows the deletion of nodes', () => {
+  it('deletes nodes', () => {
     cy.visit(`/nodes/${rootNodeUuid}`, {
       onBeforeLoad(win) {
         win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
@@ -71,7 +71,7 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-node-item]').should('have.length', 0);
   });
 
-  it('allows the creation of nodes within nodes', () => {
+  it('creates nodes within nodes', () => {
     cy.visit(`/nodes/${leafNodeUuid}`, {
       onBeforeLoad(win) {
         win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
@@ -101,7 +101,7 @@ describe('Solution Navigator', () => {
       });
   });
 
-  it('allows deleting nodes within nodes', () => {
+  it('deletes nodes within nodes', () => {
     cy.visit(`/nodes/${rootNodeUuid}`, {
       onBeforeLoad(win) {
         win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
@@ -117,7 +117,7 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-child-node-item]').should('have.length', 0);
   });
 
-  it('allows seeing more details from a child node', () => {
+  it('see more details from a child node', () => {
     cy.visit(`/nodes/${rootNodeUuid}`, {
       onBeforeLoad(win) {
         win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
@@ -134,10 +134,26 @@ describe('Solution Navigator', () => {
   });
 
   context('when the node does not exist', () => {
-    it('displays a not found message and a link back to home', () => {
+    it('displays a not found message', () => {
       cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');
 
       cy.get('[data-test-node-not-found-message]').should('have.text', 'Node not found');
+    });
+  });
+
+  context('when a child node does not exist', () => {
+    it('removes the reference from the parent node', () => {
+      const customInitialState = {
+        nodes: initialState.nodes.filter((n) => n.uuid !== leafNodeUuid),
+      };
+
+      cy.visit(`/nodes/${rootNodeUuid}`, {
+        onBeforeLoad(win) {
+          win.localStorage.setItem('NodeStore', JSON.stringify(customInitialState));
+        },
+      });
+
+      cy.get('[data-test-child-node-item]').should('have.length', 1);
     });
   });
 });

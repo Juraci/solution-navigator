@@ -91,6 +91,15 @@ export const useNodeStore = defineStore(
       node.updatedAt = new Date().toISOString();
     };
 
+    const enforceNodeTreeConsistency = () => {
+      nodes.value.forEach((node) => {
+        node.childNodes = node.childNodes.filter((childNodeUuid) => findNode(childNodeUuid));
+        if (node.parentNode && !findNode(node.parentNode)) {
+          node.parentNode = null;
+        }
+      });
+    };
+
     return {
       nodes,
       nodesList,
@@ -101,6 +110,7 @@ export const useNodeStore = defineStore(
       addContentToNode,
       deleteNode,
       refreshUpdatedAt,
+      enforceNodeTreeConsistency,
     };
   },
   { persist: true },

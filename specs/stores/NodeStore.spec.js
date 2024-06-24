@@ -313,4 +313,41 @@ describe('NodeStore', () => {
       expect(nodeStore.nodes.length).toBe(0);
     });
   });
+
+  describe('enforceNodeTreeConsistency', () => {
+    const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+    const missingChildNodeUuid = '370d2e0f-2f8c-4c48-b874-13a88ef65503';
+    const missingParentNodeUuid = '76510564-70dd-4baa-8837-68a3adbea011';
+    const initialState = [
+      {
+        uuid,
+        title: 'example',
+        content: 'my content',
+        resolved: false,
+        childNodes: [missingChildNodeUuid],
+        pomodoroCount: 0,
+      },
+      {
+        uuid: 'a46df82c-eea1-4365-8e4b-9c0d471c2906',
+        title: 'example 2',
+        content: 'my content 2',
+        resolved: false,
+        parentNode: missingParentNodeUuid,
+        childNodes: [],
+        pomodoroCount: 0,
+      },
+    ];
+
+    it('checks for broken node references and removes them from the store', () => {
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      nodeStore.enforceNodeTreeConsistency();
+
+      expect(nodeStore.nodes.length).toBe(2);
+
+      expect(nodeStore.nodes[0]).toHaveProperty('childNodes', []);
+      expect(nodeStore.nodes[1]).toHaveProperty('parentNode', null);
+    });
+  });
 });

@@ -316,15 +316,13 @@ describe('NodeStore', () => {
 
   describe('enforceNodeTreeConsistency', () => {
     const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
-    const missingChildNodeUuid = '370d2e0f-2f8c-4c48-b874-13a88ef65503';
-    const missingParentNodeUuid = '76510564-70dd-4baa-8837-68a3adbea011';
     const initialState = [
       {
         uuid,
         title: 'example',
         content: 'my content',
         resolved: false,
-        childNodes: [missingChildNodeUuid],
+        childNodes: ['370d2e0f-2f8c-4c48-b874-13a88ef65503'],
         pomodoroCount: 0,
       },
       {
@@ -332,7 +330,7 @@ describe('NodeStore', () => {
         title: 'example 2',
         content: 'my content 2',
         resolved: false,
-        parentNode: missingParentNodeUuid,
+        parentNode: '76510564-70dd-4baa-8837-68a3adbea011',
         childNodes: [],
         pomodoroCount: 0,
       },

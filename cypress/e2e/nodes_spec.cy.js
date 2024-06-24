@@ -141,6 +141,17 @@ describe('Solution Navigator', () => {
     });
   });
 
+  it('go back to the root node', () => {
+    cy.visit(`/nodes/${leafNodeUuid}`, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+      },
+    });
+
+    cy.get('[data-test-node-go-back-to-root]').click();
+    cy.url().should('include', `/nodes/${rootNodeUuid}`);
+  });
+
   context('when a child node does not exist', () => {
     it('removes the reference from the parent node', () => {
       const customInitialState = {

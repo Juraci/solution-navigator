@@ -348,4 +348,36 @@ describe('NodeStore', () => {
       expect(nodeStore.nodes[1]).toHaveProperty('parentNode', null);
     });
   });
+
+  describe('getRootNode', () => {
+    it('returns the root node', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const childNodeUuid = '370d2e0f-2f8c-4c48-b874-13a88ef65503';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: ['370d2e0f-2f8c-4c48-b874-13a88ef65503'],
+          pomodoroCount: 0,
+        },
+        {
+          uuid: childNodeUuid,
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: uuid,
+          childNodes: [],
+          pomodoroCount: 0,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      const rootNode = nodeStore.getRootNode(childNodeUuid);
+      expect(rootNode).toHaveProperty('uuid', uuid);
+    });
+  });
 });

@@ -100,6 +100,12 @@ export const useNodeStore = defineStore(
       });
     };
 
+    const getRootNode = (uuid) => {
+      const node = findNode(uuid);
+      if (!node) return;
+      return node.parentNode ? getRootNode(node.parentNode) : node;
+    };
+
     return {
       nodes,
       nodesList,
@@ -111,6 +117,7 @@ export const useNodeStore = defineStore(
       deleteNode,
       refreshUpdatedAt,
       enforceNodeTreeConsistency,
+      getRootNode,
     };
   },
   { persist: true },

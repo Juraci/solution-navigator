@@ -1,6 +1,6 @@
 <script setup>
 import Button from 'primevue/button';
-import { ref, reactive, watch } from 'vue';
+import { ref, reactive, watch, computed } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
@@ -16,7 +16,7 @@ const props = defineProps({
 
 const emit = defineEmits(['delete', 'nodeNotFound']);
 
-const { findNode, refreshUpdatedAt, addChildNode } = useNodeStore();
+const { findNode, refreshUpdatedAt, addChildNode, getRootNode } = useNodeStore();
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
@@ -33,6 +33,10 @@ if (node) {
 } else {
   emit('nodeNotFound');
 }
+
+const rootNodeAddress = computed(() => {
+  return `/nodes/${getRootNode(props.nodeUuid).uuid}`;
+});
 </script>
 
 <template>
@@ -86,6 +90,16 @@ if (node) {
         rounded
         @click="addChildNode(node.uuid)"
       />
+      <router-link v-if="node.parentNode" :to="rootNodeAddress">
+        <Button
+          data-test-node-go-back-to-root
+          label="Back to root node"
+          icon="pi pi-arrow-left"
+          severity="secondary"
+          aria-label="Back to root node"
+          rounded
+        />
+      </router-link>
     </div>
     <ChildNode
       v-for="childNodeUuid in node.childNodes"

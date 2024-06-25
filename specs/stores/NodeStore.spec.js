@@ -71,18 +71,22 @@ describe('NodeStore', () => {
 
       const initialState = [
         {
+          uuid: '2947d509-ba89-4be5-a6c2-4c6cf546f6ed',
           title: 'example',
           content: 'my content',
           resolved: false,
+          parentNode: null,
           childNodes: [],
           pomodoroCount: 0,
           createdAt: oldNode,
           updatedAt: oldNode,
         },
         {
+          uuid: '8881bc3f-7497-4440-9f53-7781b7f6bade',
           title: 'example 2',
           content: 'my content 2',
           resolved: false,
+          parentNode: null,
           childNodes: [],
           pomodoroCount: 0,
           createdAt: newNode,
@@ -98,6 +102,50 @@ describe('NodeStore', () => {
       expect(firstNode).toHaveProperty('updatedAt', newNode);
       const secondNode = nodeStore.nodesList[1];
       expect(secondNode).toHaveProperty('updatedAt', oldNode);
+    });
+
+    it('lists only the root nodes', () => {
+      const initialState = [
+        {
+          uuid: '2947d509-ba89-4be5-a6c2-4c6cf546f6ed',
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          parentNode: null,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: '2022-06-16T21:59:54.858Z',
+          updatedAt: '2023-06-16T21:59:54.858Z',
+        },
+        {
+          uuid: '8881bc3f-7497-4440-9f53-7781b7f6bade',
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: null,
+          childNodes: ['8f4f5ccc-1232-4168-9ed8-b18b8022d7ff'],
+          pomodoroCount: 0,
+          createdAt: '2022-06-16T21:59:54.858Z',
+          updatedAt: '2023-06-16T21:59:54.858Z',
+        },
+        {
+          uuid: '8f4f5ccc-1232-4168-9ed8-b18b8022d7ff',
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: '8881bc3f-7497-4440-9f53-7781b7f6bade',
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: '2022-06-16T21:59:54.858Z',
+          updatedAt: '2023-06-16T21:59:54.858Z',
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      expect(nodeStore.nodesList.length).toBe(2);
+      expect(nodeStore.nodesList.map((node) => node.parentNode)).toEqual([null, null]);
     });
   });
 

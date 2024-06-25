@@ -10,7 +10,9 @@ export const useNodeStore = defineStore(
 
     // getters
     const nodesList = computed(() => {
-      return nodes.value.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      return nodes.value
+        .filter((n) => !n.parentNode)
+        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
     });
 
     // actions

@@ -8,7 +8,7 @@ import { useConfirm } from 'primevue/useconfirm';
 
 const router = useRouter();
 const route = useRoute();
-const { addNode, deleteNode } = useNodeStore();
+const { addNode, deleteNode, saveStore } = useNodeStore();
 const confirm = useConfirm();
 
 const handleAddNode = () => {
@@ -35,12 +35,17 @@ const deleteConfirmation = (nodeUuid) => {
 const handleNodeNotFound = () => {
   router.push({ name: 'node.not-found' });
 };
+
+const handleSaveStore = () => {
+  saveStore();
+};
 </script>
 
 <template>
   <div class="container">
     <div class="side-panel">
       <div class="side-panel-header">
+        <Button icon="pi pi-save" aria-label="Save" severity="secondary" @click="handleSaveStore" />
         <Button
           data-test-create-node
           icon="pi pi-pen-to-square"
@@ -78,5 +83,6 @@ const handleNodeNotFound = () => {
 .side-panel-header {
   display: flex;
   justify-content: flex-end;
+  gap: 5px;
 }
 </style>

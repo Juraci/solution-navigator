@@ -108,6 +108,22 @@ export const useNodeStore = defineStore(
       return node.parentNode ? getRootNode(node.parentNode) : node;
     };
 
+    const saveStore = () => {
+      const nodesJson = JSON.parse(JSON.stringify(nodes.value));
+      const nodesString = JSON.stringify(nodesJson);
+
+      // create the downloadable file
+      const blob = new Blob([nodesString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'solutionNavigatorSave.json'; // Name of the file to be downloaded
+      document.body.appendChild(link); // Append the link to the body
+      link.click(); // Programmatically click the link to trigger the download
+      document.body.removeChild(link); // Remove the link from the body
+      URL.revokeObjectURL(url); // Clean up the URL object
+    };
+
     return {
       nodes,
       nodesList,
@@ -120,6 +136,7 @@ export const useNodeStore = defineStore(
       refreshUpdatedAt,
       enforceNodeTreeConsistency,
       getRootNode,
+      saveStore,
     };
   },
   { persist: true },

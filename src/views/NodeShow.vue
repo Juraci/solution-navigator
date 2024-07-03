@@ -1,6 +1,6 @@
 <script setup>
 import Button from 'primevue/button';
-import { ref, reactive, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
@@ -20,23 +20,37 @@ const { findNode, refreshUpdatedAt, addChildNode, getRootNode } = useNodeStore()
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
+const nodeTitle = ref('');
+const nodeContent = ref('');
 const contentPlaceholder = ref('double click to add content or edit it...');
 
 const node = findNode(props.nodeUuid);
 
-if (node) {
-  reactive(node);
+if (!node) {
+  emit('nodeNotFound');
+} else {
+  nodeTitle.value = node.title;
+  nodeContent.value = node.content;
 
-  watch(node, () => {
+  watch(nodeTitle, (newValue) => {
+    node.title = newValue;
     refreshUpdatedAt(node.uuid);
   });
-} else {
-  emit('nodeNotFound');
+
+  watch(nodeContent, (newValue) => {
+    node.content = newValue;
+    refreshUpdatedAt(node.uuid);
+  });
 }
 
 const rootNodeAddress = computed(() => {
   return `/nodes/${getRootNode(props.nodeUuid).uuid}`;
 });
+
+const handleAddChildNode = () => {
+  addChildNode(props.nodeUuid);
+  refreshUpdatedAt(props.nodeUuid);
+};
 </script>
 
 <template>
@@ -52,7 +66,7 @@ const rootNodeAddress = computed(() => {
     </div>
     <InputText
       v-if="editingTitle"
-      v-model="node.title"
+      v-model="nodeTitle"
       autofocus
       data-test-node-title
       type="text"
@@ -67,7 +81,7 @@ const rootNodeAddress = computed(() => {
     <Divider />
     <Textarea
       v-if="editingContent"
-      v-model="node.content"
+      v-model="nodeContent"
       data-test-node-content
       tabindex="0"
       rows="20"
@@ -88,7 +102,7 @@ const rootNodeAddress = computed(() => {
         severity="secondary"
         aria-label="Add child node"
         rounded
-        @click="addChildNode(node.uuid)"
+        @click="handleAddChildNode"
       />
       <router-link v-if="node.parentNode" :to="rootNodeAddress">
         <Button

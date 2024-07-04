@@ -66,7 +66,7 @@ describe('Solution Navigator', () => {
     });
 
     cy.get('[data-test-node-delete]').click();
-    cy.get('.p-confirm-dialog-accept').click();
+    cy.get('.p-confirmdialog-accept-button').click();
 
     cy.get('[data-test-node-item]').should('have.length', 0);
   });

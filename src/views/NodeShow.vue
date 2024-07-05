@@ -140,6 +140,9 @@ const handleAddChildNode = () => {
   height: 100%;
   overflow: auto;
 }
+.p-textarea {
+  min-height: 400px;
+}
 .active-node-panel-header {
   display: flex;
   justify-content: flex-end;

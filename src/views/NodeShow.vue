@@ -14,7 +14,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['delete', 'nodeNotFound']);
+const emit = defineEmits(['delete', 'nodeNotFound', 'toggleExpand']);
 
 const { findNode, refreshUpdatedAt, addChildNode, getRootNode } = useNodeStore();
 const editingTitle = ref(false);
@@ -56,6 +56,14 @@ const handleAddChildNode = () => {
 <template>
   <div v-if="node" class="active-node">
     <div class="active-node-panel-header">
+      <Button
+        data-test-node-expand
+        class="expand-button"
+        icon="pi pi-arrows-h"
+        aria-label="Expand"
+        severity="secondary"
+        @click="emit('toggleExpand')"
+      />
       <Button
         data-test-node-delete
         icon="pi pi-trash"
@@ -146,6 +154,9 @@ const handleAddChildNode = () => {
 .active-node-panel-header {
   display: flex;
   justify-content: flex-end;
+}
+.expand-button {
+  margin-right: auto;
 }
 .child-nodes-actions {
   display: flex;

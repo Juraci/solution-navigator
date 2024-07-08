@@ -105,6 +105,15 @@ describe('NodeShow', () => {
     });
   });
 
+  describe('when clicking the expand node button', () => {
+    it('emits a toggle expand event', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.find('[data-test-node-expand]').trigger('click');
+      expect(wrapper.emitted('toggleExpand')).toBeTruthy();
+    });
+  });
+
   describe('when the node does not exist', () => {
     it('emits a node not found event', () => {
       const wrapper = createWrapper([]);

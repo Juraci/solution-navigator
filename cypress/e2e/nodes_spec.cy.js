@@ -133,6 +133,17 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-node-title]').should('have.text', 'my child node level 1');
   });
 
+  it('expands the node hidding the side panel', () => {
+    cy.visit(`/nodes/${rootNodeUuid}`, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+      },
+    });
+
+    cy.get('[data-test-node-expand]').click();
+    cy.get('.side-panel').should('not.be.visible');
+  });
+
   context('when the node does not exist', () => {
     it('displays a not found message', () => {
       cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');

@@ -29,7 +29,7 @@ const { nodesList } = storeToRefs(store);
   </router-link>
 </template>
 
-<style scoped>
+<style>
 .node-card-title {
   white-space: nowrap;
   overflow: hidden;

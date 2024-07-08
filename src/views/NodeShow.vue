@@ -125,7 +125,7 @@ const handleAddChildNode = () => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .active-node {
   display: flex;
   flex-direction: column;

@@ -61,7 +61,7 @@ const handleNodeNotFound = () => {
   </div>
 </template>
 
-<style scoped>
+<style>
 .container {
   display: grid;
   grid-template-columns: minmax(400px, 1fr) 3fr;

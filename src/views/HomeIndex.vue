@@ -1,4 +1,5 @@
 <script setup>
+import { ref, computed } from 'vue';
 import Button from 'primevue/button';
 import NodesArbor from '@/components/NodesArbor.vue';
 import ConfirmDialog from 'primevue/confirmdialog';
@@ -10,9 +11,10 @@ import { computed } from 'vue';
 
 const router = useRouter();
 const route = useRoute();
+const isSidePanelVisible = ref(true);
+const { addNode, deleteNode } = useNodeStore();
 const confirm = useConfirm();
 const { nodes } = storeToRefs(useNodeStore());
-const { addNode, deleteNode } = useNodeStore;
 
 const handleAddNode = () => {
   const uuid = addNode();
@@ -34,6 +36,10 @@ const deleteConfirmation = (nodeUuid) => {
     reject: () => {},
   });
 };
+
+const gridTemplateColumns = computed(() => {
+  return isSidePanelVisible.value ? 'minmax(400px, 1fr) 3fr' : '1fr';
+});
 
 const handleNodeNotFound = () => {
   router.push({ name: 'node.not-found' });
@@ -64,8 +70,8 @@ const downloadNodesLink = computed(() => {
 </script>
 
 <template>
-  <div class="container">
-    <div class="side-panel">
+  <div class="container" :style="{ 'grid-template-columns': gridTemplateColumns }">
+    <div v-show="isSidePanelVisible" class="side-panel">
       <div class="side-panel-header">
         <Button
           icon="pi pi-save"
@@ -89,15 +95,15 @@ const downloadNodesLink = computed(() => {
       :key="route.path"
       @delete="deleteConfirmation"
       @node-not-found="handleNodeNotFound"
+      @toggle-expand="isSidePanelVisible = !isSidePanelVisible"
     />
     <ConfirmDialog />
   </div>
 </template>
 
-<style scoped>
+<style>
 .container {
   display: grid;
-  grid-template-columns: minmax(400px, 1fr) 3fr;
   grid-column-gap: 10px;
 }
 .side-panel {

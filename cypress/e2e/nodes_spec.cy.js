@@ -66,7 +66,7 @@ describe('Solution Navigator', () => {
     });
 
     cy.get('[data-test-node-delete]').click();
-    cy.get('.p-confirm-dialog-accept').click();
+    cy.get('.p-confirmdialog-accept-button').click();
 
     cy.get('[data-test-node-item]').should('have.length', 0);
   });
@@ -131,6 +131,17 @@ describe('Solution Navigator', () => {
       });
 
     cy.get('[data-test-node-title]').should('have.text', 'my child node level 1');
+  });
+
+  it('expands the node hidding the side panel', () => {
+    cy.visit(`/nodes/${rootNodeUuid}`, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+      },
+    });
+
+    cy.get('[data-test-node-expand]').click();
+    cy.get('.side-panel').should('not.be.visible');
   });
 
   context('when the node does not exist', () => {

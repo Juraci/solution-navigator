@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, ref, watch, computed } from 'vue';
+import { ref, watch, computed } from 'vue';
 import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
 import Chip from 'primevue/chip';
@@ -21,30 +21,51 @@ const props = defineProps({
   },
 });
 
-const { findNode, addChildNode, deleteNode, refreshUpdatedAt, enforceNodeTreeConsistency } =
-  useNodeStore();
+const {
+  findNode,
+  addChildNode,
+  deleteNode,
+  refreshUpdatedAt,
+  enforceNodeTreeConsistency,
+  getRootNode,
+} = useNodeStore();
+
 const editing = ref(false);
+const nodeTitle = ref('');
 
 const node = findNode(props.nodeUuid);
-if (node) {
-  reactive(node);
-  watch(node, () => {
+if (!node) {
+  enforceNodeTreeConsistency();
+} else {
+  nodeTitle.value = node.title;
+
+  watch(nodeTitle, (newValue) => {
+    node.title = newValue;
     refreshUpdatedAt(node.uuid);
   });
-} else {
-  enforceNodeTreeConsistency();
 }
 
 const childNodes = computed(() => {
   return node ? node.childNodes : [];
 });
+
+const handleAddChildNode = () => {
+  addChildNode(props.nodeUuid);
+  refreshUpdatedAt(props.nodeUuid);
+  refreshUpdatedAt(getRootNode(props.nodeUuid).uuid);
+};
+
+const handleDeleteNode = () => {
+  refreshUpdatedAt(getRootNode(props.nodeUuid).uuid);
+  deleteNode(props.nodeUuid);
+};
 </script>
 
 <template>
   <div v-if="node" :style="{ 'margin-left': level * 1 + 'rem' }" data-test-child-node-item>
     <span v-if="editing" class="inline-flex items-center gap-2">
       <InputText
-        v-model="node.title"
+        v-model="nodeTitle"
         autofocus
         data-test-child-node-title
         type="text"
@@ -57,7 +78,7 @@ const childNodes = computed(() => {
     <Chip v-else>
       <Checkbox v-model="node.resolved" :binary="true" />
       <div data-test-child-node-title class="chip-title">
-        {{ node.title || 'add a title' }}
+        {{ nodeTitle || 'add a title' }}
       </div>
       <div class="chip-actions">
         <Button
@@ -86,7 +107,7 @@ const childNodes = computed(() => {
           raised
           rounded
           aria-label="add child node"
-          @click="addChildNode(nodeUuid)"
+          @click="handleAddChildNode"
         />
         <Button
           data-test-child-node-delete
@@ -95,7 +116,7 @@ const childNodes = computed(() => {
           raised
           rounded
           aria-label="add child node"
-          @click="deleteNode(nodeUuid)"
+          @click="handleDeleteNode"
         />
       </div>
     </Chip>

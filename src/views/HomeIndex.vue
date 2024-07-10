@@ -7,7 +7,6 @@ import { useRouter, useRoute } from 'vue-router';
 import { useNodeStore } from '@/stores/NodeStore';
 import { useConfirm } from 'primevue/useconfirm';
 import { storeToRefs } from 'pinia';
-import { computed } from 'vue';
 
 const router = useRouter();
 const route = useRoute();

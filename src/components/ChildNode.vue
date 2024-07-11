@@ -90,16 +90,17 @@ const handleDeleteNode = () => {
           aria-label="edit"
           @click="editing = true"
         />
-        <router-link :key="node.uuid" :to="`/nodes/${node.uuid}`">
-          <Button
-            data-test-child-node-show
-            icon="pi pi-search-plus"
-            text
-            raised
-            rounded
-            aria-label="show node"
-          />
-        </router-link>
+        <Button
+          :key="node.uuid"
+          data-test-child-node-show
+          icon="pi pi-search-plus"
+          as="router-link"
+          :to="`/nodes/${node.uuid}`"
+          text
+          raised
+          rounded
+          aria-label="show node"
+        />
         <Button
           data-test-child-node-add-child-node
           icon="pi pi-plus"

@@ -112,16 +112,17 @@ const handleAddChildNode = () => {
         rounded
         @click="handleAddChildNode"
       />
-      <router-link v-if="node.parentNode" :to="rootNodeAddress">
-        <Button
-          data-test-node-go-back-to-root
-          label="Back to root node"
-          icon="pi pi-arrow-left"
-          severity="secondary"
-          aria-label="Back to root node"
-          rounded
-        />
-      </router-link>
+      <Button
+        v-if="node.parentNode"
+        data-test-node-go-back-to-root
+        label="Back to root node"
+        icon="pi pi-arrow-left"
+        as="router-link"
+        :to="rootNodeAddress"
+        severity="secondary"
+        aria-label="Back to root node"
+        rounded
+      />
     </div>
     <ChildNode
       v-for="childNodeUuid in node.childNodes"

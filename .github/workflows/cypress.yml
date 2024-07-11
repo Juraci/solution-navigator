@@ -30,7 +30,7 @@ jobs:
           # Records to Cypress Cloud 
           # https://docs.cypress.io/guides/cloud/projects#Set-up-a-project-to-record
           record: true
-          parallel: false # Runs test in parallel using settings above
+          parallel: true # Runs test in parallel using settings above
           tag: node-20
         env:
           # For recording and parallelization to work you must set your CYPRESS_RECORD_KEY

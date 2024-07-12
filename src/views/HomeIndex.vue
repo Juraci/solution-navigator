@@ -55,7 +55,9 @@ const handleNodeNotFound = () => {
           @click="handleAddNode"
         />
       </div>
-      <NodesArbor />
+      <div class="side-panel-content">
+        <NodesArbor />
+      </div>
     </div>
     <router-view
       ref="active-node"
@@ -76,13 +78,18 @@ const handleNodeNotFound = () => {
 .side-panel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  height: 100%;
-  max-height: 98vh;
-  overflow: auto;
+  gap: 0.5rem;
 }
 .side-panel-header {
   display: flex;
   justify-content: flex-end;
+}
+.side-panel-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  max-height: 94vh;
+  overflow: auto;
 }
 </style>

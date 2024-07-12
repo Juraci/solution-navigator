@@ -6,12 +6,14 @@ import ConfirmDialog from 'primevue/confirmdialog';
 import { useRouter, useRoute } from 'vue-router';
 import { useNodeStore } from '@/stores/NodeStore';
 import { useConfirm } from 'primevue/useconfirm';
+import { storeToRefs } from 'pinia';
 
 const router = useRouter();
 const route = useRoute();
 const isSidePanelVisible = ref(true);
 const { addNode, deleteNode } = useNodeStore();
 const confirm = useConfirm();
+const { nodes } = storeToRefs(useNodeStore());
 
 const handleAddNode = () => {
   const uuid = addNode();
@@ -41,12 +43,27 @@ const gridTemplateColumns = computed(() => {
 const handleNodeNotFound = () => {
   router.push({ name: 'node.not-found' });
 };
+
+const downloadNodesLink = computed(() => {
+  const jsonNodes = JSON.stringify(nodes.value);
+  const blob = new Blob([jsonNodes], { type: 'application/json' });
+
+  return URL.createObjectURL(blob);
+});
 </script>
 
 <template>
   <div class="container" :style="{ 'grid-template-columns': gridTemplateColumns }">
     <div v-show="isSidePanelVisible" class="side-panel">
       <div class="side-panel-header">
+        <Button
+          icon="pi pi-save"
+          aria-label="Save"
+          severity="secondary"
+          as="a"
+          :href="downloadNodesLink"
+          :download="`solution-navigator-${new Date().toISOString()}.json`"
+        />
         <Button
           data-test-create-node
           icon="pi pi-pen-to-square"
@@ -83,6 +100,7 @@ const handleNodeNotFound = () => {
 .side-panel-header {
   display: flex;
   justify-content: flex-end;
+  gap: 5px;
 }
 .side-panel-content {
   display: flex;

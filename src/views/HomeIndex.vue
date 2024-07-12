@@ -69,6 +69,7 @@ const downloadNodesLink = computed(() => {
           icon="pi pi-pen-to-square"
           aria-label="Create Node"
           severity="secondary"
+          @click="handleAddNode"
         />
       </div>
       <NodesArbor />

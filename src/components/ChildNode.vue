@@ -4,6 +4,7 @@ import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
 import Chip from 'primevue/chip';
 import InputText from 'primevue/inputtext';
+import Popover from 'primevue/popover';
 import { useNodeStore } from '@/stores/NodeStore';
 
 const props = defineProps({
@@ -32,6 +33,7 @@ const {
 
 const editing = ref(false);
 const nodeTitle = ref('');
+const contentPreview = ref(null);
 
 const node = findNode(props.nodeUuid);
 if (!node) {
@@ -59,10 +61,26 @@ const handleDeleteNode = () => {
   refreshUpdatedAt(getRootNode(props.nodeUuid).uuid);
   deleteNode(props.nodeUuid);
 };
+
+const showContentPreview = (event) => {
+  if (!node.content) return;
+  contentPreview.value.show(event);
+};
+
+const hideContentPreview = (event) => {
+  if (!node.content) return;
+  contentPreview.value.hide(event);
+};
 </script>
 
 <template>
-  <div v-if="node" :style="{ 'margin-left': level * 1 + 'rem' }" data-test-child-node-item>
+  <div
+    v-if="node"
+    :style="{ 'margin-left': level * 1 + 'rem' }"
+    data-test-child-node-item
+    @mouseenter="showContentPreview"
+    @mouseleave="hideContentPreview"
+  >
     <span v-if="editing" class="inline-flex items-center gap-2">
       <InputText
         v-model="nodeTitle"
@@ -122,6 +140,11 @@ const handleDeleteNode = () => {
       </div>
     </Chip>
   </div>
+  <Popover ref="contentPreview">
+    <div class="content-preview">
+      <p>{{ node.content }}</p>
+    </div>
+  </Popover>
   <ChildNode
     v-for="childNodeUuid in childNodes"
     :key="childNodeUuid"
@@ -138,5 +161,11 @@ const handleDeleteNode = () => {
 .chip-actions {
   display: flex;
   gap: 0.5rem;
+}
+.content-preview {
+  white-space: pre-wrap;
+  max-height: 400px;
+  height: 100%;
+  overflow: auto;
 }
 </style>

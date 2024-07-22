@@ -65,6 +65,7 @@ const downloadNodesLink = computed(() => {
             class="search-input"
             placeholder="Search"
             type="text"
+            @keydown.esc="searchQuery = ''"
           />
           <Button icon="pi pi-times" severity="secondary" @click="searchQuery = ''" />
         </InputGroup>

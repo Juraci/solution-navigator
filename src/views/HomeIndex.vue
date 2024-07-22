@@ -3,6 +3,8 @@ import { ref, computed } from 'vue';
 import Button from 'primevue/button';
 import NodesArbor from '@/components/NodesArbor.vue';
 import ConfirmDialog from 'primevue/confirmdialog';
+import InputText from 'primevue/inputtext';
+import InputGroup from 'primevue/inputgroup';
 import { useRouter, useRoute } from 'vue-router';
 import { useNodeStore } from '@/stores/NodeStore';
 import { useConfirm } from 'primevue/useconfirm';
@@ -13,7 +15,7 @@ const route = useRoute();
 const isSidePanelVisible = ref(true);
 const { addNode, deleteNode } = useNodeStore();
 const confirm = useConfirm();
-const { nodes } = storeToRefs(useNodeStore());
+const { nodes, searchQuery } = storeToRefs(useNodeStore());
 
 const handleAddNode = () => {
   const uuid = addNode();
@@ -56,6 +58,16 @@ const downloadNodesLink = computed(() => {
   <div class="container" :style="{ 'grid-template-columns': gridTemplateColumns }">
     <div v-show="isSidePanelVisible" class="side-panel">
       <div class="side-panel-header">
+        <InputGroup>
+          <InputText
+            v-model="searchQuery"
+            data-test-search-input
+            class="search-input"
+            placeholder="Search"
+            type="text"
+          />
+          <Button icon="pi pi-times" severity="secondary" @click="searchQuery = ''" />
+        </InputGroup>
         <Button
           icon="pi pi-save"
           aria-label="Save"
@@ -101,6 +113,9 @@ const downloadNodesLink = computed(() => {
   display: flex;
   justify-content: flex-end;
   gap: 5px;
+}
+.search-input {
+  flex-grow: 1;
 }
 .side-panel-content {
   display: flex;

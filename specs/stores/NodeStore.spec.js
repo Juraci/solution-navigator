@@ -8,7 +8,7 @@ describe('NodeStore', () => {
     setActivePinia(
       createTestingPinia({
         initialState: {
-          NodeStore: { nodes },
+          NodeStore: { nodes, searchQuery: '' },
         },
         createSpy: vi.fn,
         stubActions: false,
@@ -20,6 +20,7 @@ describe('NodeStore', () => {
     setupPinia();
     const nodeStore = useNodeStore();
     expect(nodeStore.nodes.length).toBe(0);
+    expect(nodeStore.searchQuery).toEqual('');
   });
 
   describe('addNode', () => {
@@ -146,6 +147,42 @@ describe('NodeStore', () => {
 
       expect(nodeStore.nodesList.length).toBe(2);
       expect(nodeStore.nodesList.map((node) => node.parentNode)).toEqual([null, null]);
+    });
+
+    it('filters nodes by search query', () => {
+      const oldNode = '2022-06-16T21:59:54.858Z';
+      const newNode = '2023-06-16T21:59:54.858Z';
+
+      const initialState = [
+        {
+          uuid: '2947d509-ba89-4be5-a6c2-4c6cf546f6ed',
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          parentNode: null,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: oldNode,
+          updatedAt: oldNode,
+        },
+        {
+          uuid: '8881bc3f-7497-4440-9f53-7781b7f6bade',
+          title: 'example 2',
+          content: 'my content 2',
+          resolved: false,
+          parentNode: null,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: newNode,
+          updatedAt: newNode,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+      nodeStore.searchQuery = 'my content 2';
+
+      expect(nodeStore.nodesList.length).toBe(1);
     });
   });
 

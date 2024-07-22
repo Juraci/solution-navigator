@@ -4,9 +4,9 @@ describe('Solution Navigator', () => {
   const initialState = {
     nodes: [
       {
-        uuid: '860639dd-92ab-4220-9513-4488329db5dd',
+        uuid: leafNodeUuid,
         title: 'my child node level 1',
-        content: '',
+        content: 'my content level 1',
         resolved: false,
         childNodes: [],
         parentNode: 'd1d551f6-ff27-4bf5-86be-cc2fb5ca6caf',
@@ -19,14 +19,14 @@ describe('Solution Navigator', () => {
         title: 'my child node',
         content: '',
         resolved: false,
-        childNodes: ['860639dd-92ab-4220-9513-4488329db5dd'],
-        parentNode: '5b2fa173-b6d4-4e91-8c16-9c5ab76397b8',
+        childNodes: [leafNodeUuid],
+        parentNode: rootNodeUuid,
         pomodoroCount: 0,
         createdAt: '2024-06-23T20:41:19.297Z',
         updatedAt: '2024-06-23T20:41:32.314Z',
       },
       {
-        uuid: '5b2fa173-b6d4-4e91-8c16-9c5ab76397b8',
+        uuid: rootNodeUuid,
         title: 'my title',
         content: 'my content',
         resolved: false,
@@ -144,14 +144,6 @@ describe('Solution Navigator', () => {
     cy.get('.side-panel').should('not.be.visible');
   });
 
-  context('when the node does not exist', () => {
-    it('displays a not found message', () => {
-      cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');
-
-      cy.get('[data-test-node-not-found-message]').should('have.text', 'Node not found');
-    });
-  });
-
   it('go back to the root node', () => {
     cy.visit(`/nodes/${leafNodeUuid}`, {
       onBeforeLoad(win) {
@@ -161,6 +153,33 @@ describe('Solution Navigator', () => {
 
     cy.get('[data-test-node-go-back-to-root]').click();
     cy.url().should('include', `/nodes/${rootNodeUuid}`);
+  });
+
+  it('searches for a node', () => {
+    cy.visit('/', {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+      },
+    });
+
+    cy.get('[data-test-search-input]').type('my content');
+    cy.get('[data-test-node-item]').should('have.length', 2);
+
+    cy.get('[data-test-search-input]').clear();
+
+    cy.get('[data-test-search-input]').type('my content level 1');
+    cy.get('[data-test-node-item]').should('have.length', 1);
+
+    cy.get('[data-test-node-item]').eq(0).click();
+    cy.url().should('include', `/nodes/${leafNodeUuid}`);
+  });
+
+  context('when the node does not exist', () => {
+    it('displays a not found message', () => {
+      cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');
+
+      cy.get('[data-test-node-not-found-message]').should('have.text', 'Node not found');
+    });
   });
 
   context('when a child node does not exist', () => {

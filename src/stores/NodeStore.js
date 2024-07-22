@@ -7,11 +7,19 @@ export const useNodeStore = defineStore(
   () => {
     // state
     const nodes = ref([]);
+    const searchQuery = ref('');
 
     // getters
     const nodesList = computed(() => {
-      return nodes.value
-        .filter((n) => !n.parentNode)
+      const baseList =
+        searchQuery.value === '' ? nodes.value.filter((n) => !n.parentNode) : nodes.value;
+
+      return baseList
+        .filter(
+          (n) =>
+            n.title.toLowerCase().includes(searchQuery.value.toLowerCase()) ||
+            n.content.toLowerCase().includes(searchQuery.value.toLowerCase()),
+        )
         .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
     });
 
@@ -110,6 +118,7 @@ export const useNodeStore = defineStore(
 
     return {
       nodes,
+      searchQuery,
       nodesList,
       addNode,
       addChildNode,

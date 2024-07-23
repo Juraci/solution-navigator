@@ -181,14 +181,12 @@ describe('Solution Navigator', () => {
       },
     });
 
-    cy.intercept('/node_modules/primeicons/fonts/primeicons*').as('primeicons');
-    cy.wait('@primeicons', { requestTimeout: 10000, responseTimeout: 10000 });
-
+    cy.waitForPrimevue();
     cy.get('[data-test-child-node-item]').eq(1).as('childNode');
     cy.get('@childNode').realMouseWheel({ deltaY: 200 });
     cy.get('@childNode').realHover();
 
-    cy.get('[data-test-content-preview]').should('have.text', 'my content level 1');
+    cy.get('[data-test-content-preview]').contains('my content level 1');
   });
 
   context('when the node does not exist', () => {
@@ -211,6 +209,7 @@ describe('Solution Navigator', () => {
         },
       });
 
+      cy.waitForPrimevue();
       cy.get('[data-test-child-node-item]').should('have.length', 1);
     });
   });

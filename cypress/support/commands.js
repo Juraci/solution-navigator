@@ -23,3 +23,8 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('waitForPrimevue', () => {
+  cy.intercept('/node_modules/primeicons/fonts/primeicons*').as('primeicons');
+  cy.wait('@primeicons', { requestTimeout: 10000, responseTimeout: 10000 });
+});

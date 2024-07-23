@@ -1,4 +1,5 @@
 <script setup>
+import markdownit from 'markdown-it';
 import { ref, watch, computed } from 'vue';
 import Button from 'primevue/button';
 import Checkbox from 'primevue/checkbox';
@@ -34,6 +35,7 @@ const {
 const editing = ref(false);
 const nodeTitle = ref('');
 const contentPreview = ref(null);
+const md = markdownit({ linkify: true });
 
 const node = findNode(props.nodeUuid);
 if (!node) {
@@ -141,9 +143,7 @@ const hideContentPreview = (event) => {
     </Chip>
   </div>
   <Popover ref="contentPreview" data-test-content-preview>
-    <div class="content-preview">
-      <p>{{ node.content }}</p>
-    </div>
+    <div class="content-preview" v-html="md.render(node.content)"></div>
   </Popover>
   <ChildNode
     v-for="childNodeUuid in childNodes"

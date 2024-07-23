@@ -1,4 +1,5 @@
 <script setup>
+import markdownit from 'markdown-it';
 import Button from 'primevue/button';
 import { ref, watch, computed } from 'vue';
 import InputText from 'primevue/inputtext';
@@ -23,6 +24,7 @@ const titlePlaceHolder = ref('add a title...');
 const nodeTitle = ref('');
 const nodeContent = ref('');
 const contentPlaceholder = ref('double click to add content or edit it...');
+const md = markdownit({ linkify: true });
 
 const node = findNode(props.nodeUuid);
 
@@ -99,9 +101,13 @@ const handleAddChildNode = () => {
         @focusout="editingContent = false"
         @keydown.esc="editingContent = false"
       />
-      <div v-else data-test-node-content class="final-content" @dblclick="editingContent = true">
-        {{ node.content || contentPlaceholder }}
-      </div>
+      <div
+        v-else
+        data-test-node-content
+        class="final-content"
+        @dblclick="editingContent = true"
+        v-html="md.render(node.content) || contentPlaceholder"
+      ></div>
       <Divider />
       <div class="child-nodes-actions">
         <Button

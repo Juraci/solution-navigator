@@ -174,6 +174,23 @@ describe('Solution Navigator', () => {
     cy.url().should('include', `/nodes/${leafNodeUuid}`);
   });
 
+  it('shows the content preview of a child node on hover', () => {
+    cy.visit(`/nodes/${rootNodeUuid}`, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+      },
+    });
+
+    cy.intercept('/node_modules/primeicons/fonts/primeicons*').as('primeicons');
+    cy.wait('@primeicons', { requestTimeout: 10000, responseTimeout: 10000 });
+
+    cy.get('[data-test-child-node-item]').eq(1).as('childNode');
+    cy.get('@childNode').realMouseWheel({ deltaY: 200 });
+    cy.get('@childNode').realHover();
+
+    cy.get('[data-test-content-preview]').should('have.text', 'my content level 1');
+  });
+
   context('when the node does not exist', () => {
     it('displays a not found message', () => {
       cy.visit('/nodes/62090d47-3104-4d50-b384-54728a0208dd');

@@ -140,7 +140,7 @@ const hideContentPreview = (event) => {
       </div>
     </Chip>
   </div>
-  <Popover ref="contentPreview">
+  <Popover ref="contentPreview" data-test-content-preview>
     <div class="content-preview">
       <p>{{ node.content }}</p>
     </div>

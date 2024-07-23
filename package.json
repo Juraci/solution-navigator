@@ -35,6 +35,7 @@
     "@vue/eslint-config-prettier": "^9.0.0",
     "@vue/test-utils": "^2.4.6",
     "cypress": "^13.13.1",
+    "cypress-real-events": "^1.13.0",
     "eslint": "^9.7.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-cypress": "^3.3.0",

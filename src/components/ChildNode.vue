@@ -164,8 +164,9 @@ const hideContentPreview = (event) => {
 }
 .content-preview {
   white-space: pre-wrap;
-  max-height: 400px;
+  max-height: 20rem;
+  max-width: 40rem;
   height: 100%;
-  overflow: auto;
+  overflow: hidden;
 }
 </style>

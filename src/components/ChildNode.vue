@@ -95,7 +95,7 @@ const hideContentPreview = (event) => {
         @keydown.esc="editing = false"
       />
     </span>
-    <Chip v-else>
+    <Chip class="child-node" v-else>
       <Checkbox v-model="node.resolved" :binary="true" />
       <div data-test-child-node-title class="chip-title">
         {{ nodeTitle || 'add a title' }}
@@ -155,6 +155,10 @@ const hideContentPreview = (event) => {
 </template>
 
 <style>
+.p-chip.child-node {
+  padding: 0rem 0rem 0rem 0.5rem;
+  border-radius: 2rem;
+}
 .chip-title {
   margin: 0rem 1rem 0rem 1rem;
 }

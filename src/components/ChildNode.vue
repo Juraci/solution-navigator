@@ -105,7 +105,6 @@ const hideContentPreview = (event) => {
           data-test-child-node-edit
           icon="pi pi-pencil"
           text
-          raised
           rounded
           aria-label="edit"
           @click="editing = true"
@@ -117,7 +116,6 @@ const hideContentPreview = (event) => {
           as="router-link"
           :to="`/nodes/${node.uuid}`"
           text
-          raised
           rounded
           aria-label="show node"
         />
@@ -125,7 +123,6 @@ const hideContentPreview = (event) => {
           data-test-child-node-add-child-node
           icon="pi pi-plus"
           text
-          raised
           rounded
           aria-label="add child node"
           @click="handleAddChildNode"
@@ -134,7 +131,6 @@ const hideContentPreview = (event) => {
           data-test-child-node-delete
           icon="pi pi-times"
           text
-          raised
           rounded
           aria-label="add child node"
           @click="handleDeleteNode"
@@ -156,7 +152,7 @@ const hideContentPreview = (event) => {
 
 <style>
 .p-chip.child-node {
-  padding: 0rem 0rem 0rem 0.5rem;
+  padding: 0rem 0rem 0rem 0.8rem;
   border-radius: 2rem;
 }
 .chip-title {

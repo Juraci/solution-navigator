@@ -44,6 +44,7 @@ const { nodesList } = storeToRefs(store);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 1rem;
 }
 .node-card-content {
   white-space: nowrap;

@@ -5,6 +5,7 @@ import { ref, watch, computed } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
+import ScrollPanel from 'primevue/scrollpanel';
 import { useNodeStore } from '@/stores/NodeStore';
 import ChildNode from '@/components/ChildNode.vue';
 
@@ -74,71 +75,74 @@ const handleAddChildNode = () => {
         @click="emit('delete', node.uuid)"
       />
     </div>
-    <div class="active-node-content">
-      <InputText
-        v-if="editingTitle"
-        v-model="nodeTitle"
-        autofocus
-        data-test-node-title
-        type="text"
-        @blur="editingTitle = false"
-        @focusout="editingTitle = false"
-        @keydown.enter="editingTitle = false"
-        @keydown.esc="editingTitle = false"
-      />
-      <div v-else data-test-node-title @click="editingTitle = true">
-        {{ node.title || titlePlaceHolder }}
-      </div>
-      <Divider />
-      <Textarea
-        v-if="editingContent"
-        v-model="nodeContent"
-        data-test-node-content
-        tabindex="0"
-        rows="20"
-        autofocus
-        @blur="editingContent = false"
-        @focusout="editingContent = false"
-        @keydown.esc="editingContent = false"
-      />
-      <div
-        v-else
-        data-test-node-content
-        class="final-content"
-        @dblclick="editingContent = true"
-        v-html="md.render(node.content) || contentPlaceholder"
-      ></div>
-      <Divider />
-      <div class="child-nodes-actions">
-        <Button
-          data-test-node-add-child-node
-          label="Add child node"
-          icon="pi pi-plus-circle"
-          severity="secondary"
-          aria-label="Add child node"
-          rounded
-          @click="handleAddChildNode"
+    <ScrollPanel style="width: auto; height: 94vh">
+      <div class="active-node-content">
+        <InputText
+          v-if="editingTitle"
+          v-model="nodeTitle"
+          autofocus
+          data-test-node-title
+          type="text"
+          @blur="editingTitle = false"
+          @focusout="editingTitle = false"
+          @keydown.enter="editingTitle = false"
+          @keydown.esc="editingTitle = false"
         />
-        <Button
-          v-if="node.parentNode"
-          data-test-node-go-back-to-root
-          label="Back to root node"
-          icon="pi pi-arrow-left"
-          as="router-link"
-          :to="rootNodeAddress"
-          severity="secondary"
-          aria-label="Back to root node"
-          rounded
+        <div v-else data-test-node-title @click="editingTitle = true">
+          {{ node.title || titlePlaceHolder }}
+        </div>
+        <Divider />
+        <Textarea
+          v-if="editingContent"
+          v-model="nodeContent"
+          data-test-node-content
+          tabindex="0"
+          rows="20"
+          autofocus
+          @blur="editingContent = false"
+          @focusout="editingContent = false"
+          @keydown.esc="editingContent = false"
+        />
+        <ScrollPanel v-else style="width: auto; height: 400px">
+          <div
+            data-test-node-content
+            class="final-content"
+            @dblclick="editingContent = true"
+            v-html="md.render(node.content) || contentPlaceholder"
+          ></div>
+        </ScrollPanel>
+        <Divider />
+        <div class="child-nodes-actions">
+          <Button
+            data-test-node-add-child-node
+            label="Add child node"
+            icon="pi pi-plus-circle"
+            severity="secondary"
+            aria-label="Add child node"
+            rounded
+            @click="handleAddChildNode"
+          />
+          <Button
+            v-if="node.parentNode"
+            data-test-node-go-back-to-root
+            label="Back to root node"
+            icon="pi pi-arrow-left"
+            as="router-link"
+            :to="rootNodeAddress"
+            severity="secondary"
+            aria-label="Back to root node"
+            rounded
+          />
+        </div>
+        <ChildNode
+          v-for="childNodeUuid in node.childNodes"
+          :key="childNodeUuid"
+          :node-uuid="childNodeUuid"
+          :parent-node-uuid="node.uuid"
+          :level="0"
         />
       </div>
-      <ChildNode
-        v-for="childNodeUuid in node.childNodes"
-        :key="childNodeUuid"
-        :node-uuid="childNodeUuid"
-        :parent-node-uuid="node.uuid"
-        :level="0"
-      />
-    </div>
+    </ScrollPanel>
   </div>
 </template>
 
@@ -157,15 +161,9 @@ const handleAddChildNode = () => {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: 94vh;
-  overflow: auto;
 }
 .final-content {
   white-space: pre-wrap;
-  min-height: 400px;
-  max-height: 400px;
-  height: 100%;
-  overflow: auto;
 }
 .p-textarea {
   min-height: 400px;

@@ -69,6 +69,11 @@ const showContentPreview = (event) => {
   if (!node.content) return;
   contentPreview.value.show(event);
 };
+
+const hideContentPreview = (event) => {
+  if (!node.content) return;
+  contentPreview.value.hide(event);
+};
 </script>
 
 <template>
@@ -90,7 +95,7 @@ const showContentPreview = (event) => {
         @keydown.esc="editing = false"
       />
     </span>
-    <Chip class="child-node" v-else>
+    <Chip v-else class="child-node">
       <Checkbox v-model="node.resolved" :binary="true" />
       <div data-test-child-node-title class="chip-title">
         {{ nodeTitle || 'add a title' }}
@@ -133,7 +138,7 @@ const showContentPreview = (event) => {
       </div>
     </Chip>
   </div>
-  <Popover ref="contentPreview" data-test-content-preview>
+  <Popover ref="contentPreview" data-test-content-preview @mouseleave="hideContentPreview">
     <ScrollPanel style="max-width: 40rem; max-height: 20rem">
       <div class="content-preview" v-html="md.render(node.content)"></div>
     </ScrollPanel>

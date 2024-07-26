@@ -69,11 +69,6 @@ const showContentPreview = (event) => {
   if (!node.content) return;
   contentPreview.value.show(event);
 };
-
-const hideContentPreview = (event) => {
-  if (!node.content) return;
-  contentPreview.value.hide(event);
-};
 </script>
 
 <template>

@@ -6,6 +6,7 @@ import Checkbox from 'primevue/checkbox';
 import Chip from 'primevue/chip';
 import InputText from 'primevue/inputtext';
 import Popover from 'primevue/popover';
+import ScrollPanel from 'primevue/scrollpanel';
 import { useNodeStore } from '@/stores/NodeStore';
 
 const props = defineProps({
@@ -81,7 +82,6 @@ const hideContentPreview = (event) => {
     :style="{ 'margin-left': level * 1 + 'rem' }"
     data-test-child-node-item
     @mouseenter="showContentPreview"
-    @mouseleave="hideContentPreview"
   >
     <span v-if="editing" class="inline-flex items-center gap-2">
       <InputText
@@ -139,7 +139,9 @@ const hideContentPreview = (event) => {
     </Chip>
   </div>
   <Popover ref="contentPreview" data-test-content-preview>
-    <div class="content-preview" v-html="md.render(node.content)"></div>
+    <ScrollPanel style="max-width: 40rem; max-height: 20rem">
+      <div class="content-preview" v-html="md.render(node.content)"></div>
+    </ScrollPanel>
   </Popover>
   <ChildNode
     v-for="childNodeUuid in childNodes"
@@ -164,9 +166,5 @@ const hideContentPreview = (event) => {
 }
 .content-preview {
   white-space: pre-wrap;
-  max-height: 20rem;
-  max-width: 40rem;
-  height: 100%;
-  overflow: hidden;
 }
 </style>

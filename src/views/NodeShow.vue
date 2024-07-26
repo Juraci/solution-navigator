@@ -25,7 +25,7 @@ const titlePlaceHolder = ref('add a title...');
 const nodeTitle = ref('');
 const nodeContent = ref('');
 const contentPlaceholder = ref('double click to add content or edit it...');
-const md = markdownit({ linkify: true });
+const md = markdownit({ html: true, linkify: true, typographer: true });
 
 const node = findNode(props.nodeUuid);
 

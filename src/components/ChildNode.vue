@@ -77,12 +77,7 @@ const hideContentPreview = (event) => {
 </script>
 
 <template>
-  <div
-    v-if="node"
-    :style="{ 'margin-left': level * 1 + 'rem' }"
-    data-test-child-node-item
-    @mouseenter="showContentPreview"
-  >
+  <div v-if="node" :style="{ 'margin-left': level * 1 + 'rem' }" data-test-child-node-item>
     <span v-if="editing" class="inline-flex items-center gap-2">
       <InputText
         v-model="nodeTitle"
@@ -95,7 +90,7 @@ const hideContentPreview = (event) => {
         @keydown.esc="editing = false"
       />
     </span>
-    <Chip v-else class="child-node">
+    <Chip v-else class="child-node" @mouseenter="showContentPreview">
       <Checkbox v-model="node.resolved" :binary="true" />
       <div data-test-child-node-title class="chip-title">
         {{ nodeTitle || 'add a title' }}

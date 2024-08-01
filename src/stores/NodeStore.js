@@ -62,22 +62,6 @@ export const useNodeStore = defineStore(
 
     const findNode = (uuid) => nodes.value.find((node) => node.uuid === uuid);
 
-    const addTitleToNode = ({ uuid, title }) => {
-      const node = findNode(uuid);
-      if (!node) return;
-
-      node.title = title;
-      node.updatedAt = new Date().toISOString();
-    };
-
-    const addContentToNode = ({ uuid, content }) => {
-      const node = findNode(uuid);
-      if (!node) return;
-
-      node.content = content;
-      node.updatedAt = new Date().toISOString();
-    };
-
     const deleteNode = (uuid) => {
       const node = findNode(uuid);
 
@@ -123,8 +107,6 @@ export const useNodeStore = defineStore(
       addNode,
       addChildNode,
       findNode,
-      addTitleToNode,
-      addContentToNode,
       deleteNode,
       refreshUpdatedAt,
       enforceNodeTreeConsistency,

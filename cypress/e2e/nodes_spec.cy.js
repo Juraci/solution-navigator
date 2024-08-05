@@ -213,4 +213,18 @@ describe('Solution Navigator', () => {
       cy.get('[data-test-child-node-item]').should('have.length', 1);
     });
   });
+
+  context('when a search yields no results', () => {
+    it('shows a No Results message', () => {
+      cy.visit('/', {
+        onBeforeLoad(win) {
+          win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+        },
+      });
+
+      cy.get('[data-test-search-input]').type('this node does not exist');
+      cy.get('[data-test-node-item]').should('have.length', 0);
+      cy.get('[data-test-search-no-results]').should('include.text', 'No Results');
+    });
+  });
 });

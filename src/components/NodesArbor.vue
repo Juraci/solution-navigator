@@ -46,6 +46,13 @@ const handleFileUpload = (input) => {
           </template>
         </Card>
       </router-link>
+      <div
+        v-if="searchQuery !== '' && nodesList.length === 0"
+        class="no-results"
+        data-test-search-no-results
+      >
+        No Results
+      </div>
       <FileUpload
         v-show="searchQuery === ''"
         mode="basic"
@@ -61,6 +68,12 @@ const handleFileUpload = (input) => {
 </template>
 
 <style>
+.no-results {
+  display: flex;
+  justify-content: center;
+  margin-top: 100%;
+  color: #a1a1aa;
+}
 .side-panel-content {
   display: flex;
   flex-direction: column;

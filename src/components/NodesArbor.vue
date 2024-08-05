@@ -1,27 +1,13 @@
 <script setup>
 import Card from 'primevue/card';
 import ScrollPanel from 'primevue/scrollpanel';
-import FileUpload from 'primevue/fileupload';
+import NoResults from '@/components/NoResults.vue';
+import ImportNodes from '@/components/ImportNodes.vue';
 import { useNodeStore } from '@/stores/NodeStore';
 import { storeToRefs } from 'pinia';
 
 const store = useNodeStore();
-const { nodesList, nodes, searchQuery } = storeToRefs(store);
-
-const handleFileUpload = (input) => {
-  const reader = new FileReader();
-
-  reader.onload = (e) => {
-    try {
-      const json = JSON.parse(e.target.result);
-      nodes.value = json;
-    } catch (error) {
-      console.error('Error parsing JSON:', error);
-    }
-  };
-
-  reader.readAsText(input.files[0]);
-};
+const { nodesList } = storeToRefs(store);
 </script>
 
 <template>
@@ -46,34 +32,13 @@ const handleFileUpload = (input) => {
           </template>
         </Card>
       </router-link>
-      <div
-        v-if="searchQuery !== '' && nodesList.length === 0"
-        class="no-results"
-        data-test-search-no-results
-      >
-        No Results
-      </div>
-      <FileUpload
-        v-show="searchQuery === ''"
-        mode="basic"
-        accept=".json"
-        :max-file-size="1000000"
-        :auto="true"
-        choose-label="Import existing nodes"
-        custom-upload
-        @uploader="handleFileUpload"
-      />
+      <NoResults />
+      <ImportNodes />
     </div>
   </ScrollPanel>
 </template>
 
 <style>
-.no-results {
-  display: flex;
-  justify-content: center;
-  margin-top: 100%;
-  color: #a1a1aa;
-}
 .side-panel-content {
   display: flex;
   flex-direction: column;

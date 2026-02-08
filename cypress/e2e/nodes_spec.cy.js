@@ -181,7 +181,7 @@ describe('Solution Navigator', () => {
       },
     });
 
-    cy.waitForPrimevue();
+    //cy.waitForPrimevue();
     cy.get('[data-test-child-node-item]').eq(1).as('childNode');
     cy.get('@childNode').realMouseWheel({ deltaY: 200 });
     cy.get('@childNode').realHover();
@@ -209,7 +209,7 @@ describe('Solution Navigator', () => {
         },
       });
 
-      cy.waitForPrimevue();
+      //cy.waitForPrimevue();
       cy.get('[data-test-child-node-item]').should('have.length', 1);
     });
   });

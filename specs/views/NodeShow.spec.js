@@ -3,6 +3,7 @@ import { describe, it, expect, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import NodeShow from '@/views/NodeShow.vue';
 import { createTestingPinia } from '@pinia/testing';
+import PrimeVue from 'primevue/config';
 
 describe('NodeShow', () => {
   let node = {
@@ -25,6 +26,7 @@ describe('NodeShow', () => {
             createSpy: vi.fn,
             stubActions: false,
           }),
+          PrimeVue,
         ],
       },
       props: {
@@ -53,7 +55,7 @@ describe('NodeShow', () => {
   });
 
   describe('when the node has child nodes', () => {
-    it.skip('renders the child nodes', () => {
+    it('renders the child nodes', () => {
       const childNodes = [
         {
           uuid: '26656fbd-581e-4034-9339-fe1206d95778',
@@ -83,9 +85,10 @@ describe('NodeShow', () => {
         { ...node, childNodes: childNodes.map((n) => n.uuid) },
         ...childNodes,
       ]);
+
       const renderedChildNodes = wrapper.findAll('[data-test-child-node-item]');
 
-      expect(renderedChildNodes.count).toEqual(2);
+      expect(renderedChildNodes.length).toEqual(2);
       expect(renderedChildNodes.at(0).find('[data-test-child-node-title]').text()).toEqual(
         childNodes[0].title,
       );

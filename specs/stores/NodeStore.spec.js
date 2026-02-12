@@ -409,4 +409,106 @@ describe('NodeStore', () => {
       expect(rootNode).toHaveProperty('uuid', uuid);
     });
   });
+
+  describe('incrementPomodoro', () => {
+    it('increments the pomodoroCount of a node', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 0,
+          createdAt: '2022-06-16T21:59:54.858Z',
+          updatedAt: '2022-06-16T21:59:54.858Z',
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      nodeStore.incrementPomodoro(uuid);
+
+      const node = nodeStore.findNode(uuid);
+      expect(node.pomodoroCount).toBe(1);
+    });
+
+    it('does nothing if the node does not exist', () => {
+      setupPinia();
+      const nodeStore = useNodeStore();
+
+      nodeStore.incrementPomodoro('non-existent-uuid');
+
+      expect(nodeStore.nodes.length).toBe(0);
+    });
+  });
+
+  describe('getPomodoroCount', () => {
+    it('returns the pomodoro count for a single node', () => {
+      const uuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const initialState = [
+        {
+          uuid,
+          title: 'example',
+          content: 'my content',
+          resolved: false,
+          childNodes: [],
+          pomodoroCount: 3,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      expect(nodeStore.getPomodoroCount(uuid)).toBe(3);
+    });
+
+    it('returns the sum of pomodoro counts for the entire node tree', () => {
+      const rootUuid = '6f156d33-cc51-4f30-8e99-5f006842150d';
+      const childUuid = '370d2e0f-2f8c-4c48-b874-13a88ef65503';
+      const grandchildUuid = 'a46df82c-eea1-4365-8e4b-9c0d471c2906';
+      const initialState = [
+        {
+          uuid: rootUuid,
+          title: 'root',
+          content: '',
+          resolved: false,
+          childNodes: [childUuid],
+          pomodoroCount: 3,
+        },
+        {
+          uuid: childUuid,
+          title: 'child',
+          content: '',
+          resolved: false,
+          parentNode: rootUuid,
+          childNodes: [grandchildUuid],
+          pomodoroCount: 2,
+        },
+        {
+          uuid: grandchildUuid,
+          title: 'grandchild',
+          content: '',
+          resolved: false,
+          parentNode: childUuid,
+          childNodes: [],
+          pomodoroCount: 1,
+        },
+      ];
+
+      setupPinia(initialState);
+      const nodeStore = useNodeStore();
+
+      expect(nodeStore.getPomodoroCount(rootUuid)).toBe(6);
+    });
+
+    it('returns 0 if the node does not exist', () => {
+      setupPinia();
+      const nodeStore = useNodeStore();
+
+      expect(nodeStore.getPomodoroCount('non-existent-uuid')).toBe(0);
+    });
+  });
 });

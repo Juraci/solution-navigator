@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@primevue/themes": "^4.5.4",
+    "@vueuse/core": "^14.2.1",
     "markdown-it": "^14.1.0",
     "pinia": "^3.0.4",
     "pinia-plugin-persistedstate": "^4.7.1",

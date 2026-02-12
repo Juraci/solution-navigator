@@ -1,6 +1,7 @@
 <script setup>
 import markdownit from 'markdown-it';
 import Button from 'primevue/button';
+import Badge from 'primevue/badge';
 import { ref, watch, computed } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
@@ -8,6 +9,7 @@ import Divider from 'primevue/divider';
 import ScrollPanel from 'primevue/scrollpanel';
 import OverlayBadge from 'primevue/overlaybadge';
 import { useNodeStore } from '@/stores/NodeStore';
+import { usePomodoro } from '@/composables/usePomodoro';
 import ChildNode from '@/components/ChildNode.vue';
 
 const props = defineProps({
@@ -19,7 +21,8 @@ const props = defineProps({
 
 const emit = defineEmits(['delete', 'nodeNotFound', 'toggleExpand', 'togglePomodoroPanel']);
 
-const { findNode, refreshUpdatedAt, addChildNode, getRootNode } = useNodeStore();
+const { findNode, refreshUpdatedAt, addChildNode, getRootNode, getPomodoroCount } = useNodeStore();
+const { timerDisplay, isRunning } = usePomodoro();
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
@@ -68,15 +71,25 @@ const handleAddChildNode = () => {
         severity="secondary"
         @click="emit('toggleExpand')"
       />
-      <OverlayBadge value="2">
+      <OverlayBadge class="pomodoro-badge" v-if="isRunning" :value="timerDisplay" severity="danger">
         <Button
           data-test-show-pomodoro-panel
+          class="pomodoro-button"
           icon="pi pi-clock"
           aria-label="Show Pomodoro Panel"
           severity="secondary"
           @click="emit('togglePomodoroPanel', node.uuid)"
         />
       </OverlayBadge>
+      <Button
+        v-else
+        data-test-show-pomodoro-panel
+        class="pomodoro-button"
+        icon="pi pi-clock"
+        aria-label="Show Pomodoro Panel"
+        severity="secondary"
+        @click="emit('togglePomodoroPanel', node.uuid)"
+      />
       <Button
         data-test-node-delete
         icon="pi pi-trash"
@@ -143,6 +156,14 @@ const handleAddChildNode = () => {
             aria-label="Back to root node"
             rounded
           />
+          <span class="pomodoro-text">
+            Pomodoros:
+          </span>
+          <Badge
+            data-test-node-total-pomodoro
+            class="pomodoro-badge"
+            :value="getPomodoroCount(node.uuid)"
+          />
         </div>
         <ChildNode
           v-for="childNodeUuid in node.childNodes"
@@ -173,13 +194,22 @@ const handleAddChildNode = () => {
   flex-direction: column;
   gap: 0.5rem;
 }
+.pomodoro-text {
+  margin-top: 0.5rem;
+}
+.pomodoro-badge {
+  margin-top: 0.25rem;
+}
 .final-content {
   white-space: pre-wrap;
 }
 .p-textarea {
   min-height: 400px;
 }
-.expand-button {
+.pomodoro-button {
+  margin-right: auto;
+}
+.pomodoro-badge {
   margin-right: auto;
 }
 .child-nodes-actions {

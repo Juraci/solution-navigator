@@ -242,4 +242,41 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-start-pomodoro]').click();
     cy.get('[data-test-pomodoro-timer]').should('be.visible');
   });
+
+  it("displays the total pomodoro count on the root node", () => {
+    const pomodoroState = {
+      nodes: [
+        {
+          uuid: rootNodeUuid,
+          title: 'my title',
+          content: 'my content',
+          resolved: false,
+          childNodes: ['d1d551f6-ff27-4bf5-86be-cc2fb5ca6caf'],
+          parentNode: null,
+          pomodoroCount: 3,
+          createdAt: '2024-06-23T20:25:52.892Z',
+          updatedAt: '2024-06-23T20:41:19.326Z',
+        },
+        {
+          uuid: 'd1d551f6-ff27-4bf5-86be-cc2fb5ca6caf',
+          title: 'my child node',
+          content: '',
+          resolved: false,
+          childNodes: [],
+          parentNode: rootNodeUuid,
+          pomodoroCount: 2,
+          createdAt: '2024-06-23T20:41:19.297Z',
+          updatedAt: '2024-06-23T20:41:32.314Z',
+        },
+      ],
+    };
+
+    cy.visit(`/nodes/${rootNodeUuid}`, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(pomodoroState));
+      },
+    });
+
+    cy.get('[data-test-node-total-pomodoro]').should('have.text', '5');
+  });
 });

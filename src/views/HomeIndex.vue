@@ -2,6 +2,7 @@
 import { ref, computed } from 'vue';
 import NodesArbor from '@/components/NodesArbor.vue';
 import SidePanelHeader from '@/components/SidePanelHeader.vue';
+import PomodoroTimer from '@/components/PomodoroTimer.vue';
 import ConfirmDialog from 'primevue/confirmdialog';
 import Drawer from 'primevue/drawer';
 import { useRouter, useRoute } from 'vue-router';
@@ -57,7 +58,7 @@ const handleNodeNotFound = () => {
     <ConfirmDialog />
   </div>
   <Drawer v-model:visible="isPomodoroPanelVisible" header="Pomodoro Panel" position="right">
-    25:00
+    <PomodoroTimer />
   </Drawer>
 </template>
 

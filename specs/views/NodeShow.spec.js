@@ -133,4 +133,32 @@ describe('NodeShow', () => {
       expect(wrapper.emitted('togglePomodoroPanel')).toBeTruthy();
     });
   });
+
+  describe('when the node has pomodoro counts', () => {
+    it('displays the total pomodoro count from the node tree', () => {
+      const childNode = {
+        uuid: '26656fbd-581e-4034-9339-fe1206d95778',
+        parentNode: node.uuid,
+        title: 'child node',
+        content: '',
+        resolved: false,
+        childNodes: [],
+        pomodoroCount: 2,
+        createdAt: '2023-06-16T21:59:54.858Z',
+        updatedAt: '2023-06-16T21:59:54.858Z',
+      };
+
+      const rootWithPomodoros = {
+        ...node,
+        pomodoroCount: 3,
+        childNodes: [childNode.uuid],
+      };
+
+      const wrapper = createWrapper([rootWithPomodoros, childNode]);
+
+      const badge = wrapper.find('[data-test-node-total-pomodoro]');
+      expect(badge.exists()).toBe(true);
+      expect(badge.text()).toBe('5');
+    });
+  });
 });

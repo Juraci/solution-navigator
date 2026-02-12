@@ -94,6 +94,25 @@ export const useNodeStore = defineStore(
       });
     };
 
+    const incrementPomodoro = (uuid) => {
+      console.log(`all nodes before increment: ${JSON.stringify(nodes.value)}`);
+      const node = findNode(uuid);
+      if (!node) return;
+      node.pomodoroCount++;
+      refreshUpdatedAt(uuid);
+    };
+
+    const getPomodoroCount = (uuid) => {
+      const node = findNode(uuid);
+      if (!node) return 0;
+
+      let count = node.pomodoroCount;
+      for (const childUuid of node.childNodes) {
+        count += getPomodoroCount(childUuid);
+      }
+      return count;
+    };
+
     const getRootNode = (uuid) => {
       const node = findNode(uuid);
       if (!node) return;
@@ -110,6 +129,8 @@ export const useNodeStore = defineStore(
       deleteNode,
       refreshUpdatedAt,
       enforceNodeTreeConsistency,
+      incrementPomodoro,
+      getPomodoroCount,
       getRootNode,
     };
   },

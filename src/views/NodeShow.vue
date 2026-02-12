@@ -6,6 +6,7 @@ import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
 import ScrollPanel from 'primevue/scrollpanel';
+import OverlayBadge from 'primevue/overlaybadge';
 import { useNodeStore } from '@/stores/NodeStore';
 import ChildNode from '@/components/ChildNode.vue';
 
@@ -16,7 +17,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['delete', 'nodeNotFound', 'toggleExpand']);
+const emit = defineEmits(['delete', 'nodeNotFound', 'toggleExpand', 'togglePomodoroPanel']);
 
 const { findNode, refreshUpdatedAt, addChildNode, getRootNode } = useNodeStore();
 const editingTitle = ref(false);
@@ -67,6 +68,15 @@ const handleAddChildNode = () => {
         severity="secondary"
         @click="emit('toggleExpand')"
       />
+      <OverlayBadge value="2">
+        <Button
+          data-test-show-pomodoro-panel
+          icon="pi pi-clock"
+          aria-label="Show Pomodoro Panel"
+          severity="secondary"
+          @click="emit('togglePomodoroPanel', node.uuid)"
+        />
+      </OverlayBadge>
       <Button
         data-test-node-delete
         icon="pi pi-trash"
@@ -155,6 +165,7 @@ const handleAddChildNode = () => {
 .active-node-panel-header {
   display: flex;
   justify-content: flex-end;
+  gap: 0.5rem;
 }
 .active-node-content {
   padding-top: 0.5rem;

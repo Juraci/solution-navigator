@@ -124,4 +124,13 @@ describe('NodeShow', () => {
       expect(wrapper.emitted('nodeNotFound')).toBeTruthy();
     });
   });
+
+  describe('when clicking on show pomodoro panel button', () => {
+    it('emits a toggle pomodoro panel event', async () => {
+      const wrapper = createWrapper();
+
+      await wrapper.find('[data-test-show-pomodoro-panel]').trigger('click');
+      expect(wrapper.emitted('togglePomodoroPanel')).toBeTruthy();
+    });
+  });
 });

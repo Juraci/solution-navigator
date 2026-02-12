@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import NodesArbor from '@/components/NodesArbor.vue';
 import SidePanelHeader from '@/components/SidePanelHeader.vue';
 import ConfirmDialog from 'primevue/confirmdialog';
+import Drawer from 'primevue/drawer';
 import { useRouter, useRoute } from 'vue-router';
 import { useNodeStore } from '@/stores/NodeStore';
 import { useConfirm } from 'primevue/useconfirm';
@@ -10,6 +11,7 @@ import { useConfirm } from 'primevue/useconfirm';
 const router = useRouter();
 const route = useRoute();
 const isSidePanelVisible = ref(true);
+const isPomodoroPanelVisible = ref(false);
 const { deleteNode } = useNodeStore();
 const confirm = useConfirm();
 
@@ -50,9 +52,13 @@ const handleNodeNotFound = () => {
       @delete="deleteConfirmation"
       @node-not-found="handleNodeNotFound"
       @toggle-expand="isSidePanelVisible = !isSidePanelVisible"
+      @togglePomodoroPanel="isPomodoroPanelVisible = !isPomodoroPanelVisible"
     />
     <ConfirmDialog />
   </div>
+  <Drawer v-model:visible="isPomodoroPanelVisible" header="Pomodoro Panel" position="right">
+    25:00
+  </Drawer>
 </template>
 
 <style>

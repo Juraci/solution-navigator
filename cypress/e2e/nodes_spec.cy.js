@@ -227,4 +227,19 @@ describe('Solution Navigator', () => {
       cy.get('[data-test-search-no-results]').should('include.text', 'No Results');
     });
   });
+
+  it("starts a pomodoro timer for a given node", () => {
+    cy.visit(`/nodes/${rootNodeUuid}`, {
+      onBeforeLoad(win) {
+        win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
+      },
+    });
+
+    cy.get('[data-test-show-pomodoro-panel]').click();
+
+    cy.get('[data-test-pomodoro-panel]').should('be.visible');
+
+    cy.get('[data-test-start-pomodoro]').click();
+    cy.get('[data-test-pomodoro-timer]').should('be.visible');
+  });
 });

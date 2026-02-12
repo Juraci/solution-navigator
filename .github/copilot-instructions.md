@@ -87,6 +87,9 @@ const emit = defineEmits(['delete', 'nodeNotFound'])
 
 ## Developer Workflows
 
+### Environment Setup
+
+- Important: before any npm or node command run, ensure Node.js version matches `.nvmrc`:
 ```bash
 nvm use # Use Node.js version from .nvmrc
 ```

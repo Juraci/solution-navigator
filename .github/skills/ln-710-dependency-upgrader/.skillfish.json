@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "name": "ln-710-dependency-upgrader",
+  "owner": "levnikolaevich",
+  "repo": "claude-code-skills",
+  "path": "ln-710-dependency-upgrader",
+  "branch": "master",
+  "sha": "2c3af7adfe2f11dca2589a627b20c79542fdbb3f",
+  "source": "manual"
+}

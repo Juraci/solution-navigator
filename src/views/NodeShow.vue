@@ -76,7 +76,12 @@ const handleAddChildNode = () => {
         severity="secondary"
         @click="emit('toggleExpand')"
       />
-      <OverlayBadge class="pomodoro-badge" v-if="isRunning" :value="timerDisplay" :severity="getPomodoroSeverity">
+      <OverlayBadge
+        v-if="isRunning"
+        class="pomodoro-badge"
+        :value="timerDisplay"
+        :severity="getPomodoroSeverity"
+      >
         <Button
           data-test-show-pomodoro-panel
           class="pomodoro-button"
@@ -161,9 +166,7 @@ const handleAddChildNode = () => {
             aria-label="Back to root node"
             rounded
           />
-          <span class="pomodoro-text">
-            Pomodoros:
-          </span>
+          <span class="pomodoro-text"> Pomodoros: </span>
           <Badge
             data-test-node-total-pomodoro
             class="pomodoro-badge"

@@ -1,5 +1,5 @@
 ---
-name: running-tests
+name: testing
 description: Has information about how to test this web app, should be used when requested or in a Test Driven Development cycle.
 ---
 

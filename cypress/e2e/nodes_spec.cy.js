@@ -228,7 +228,7 @@ describe('Solution Navigator', () => {
     });
   });
 
-  it("starts a pomodoro timer for a given node", () => {
+  it('starts a pomodoro timer for a given node', () => {
     cy.visit(`/nodes/${rootNodeUuid}`, {
       onBeforeLoad(win) {
         win.localStorage.setItem('NodeStore', JSON.stringify(initialState));
@@ -243,7 +243,7 @@ describe('Solution Navigator', () => {
     cy.get('[data-test-pomodoro-timer]').should('be.visible');
   });
 
-  it("displays the total pomodoro count on the root node", () => {
+  it('displays the total pomodoro count on the root node', () => {
     const pomodoroState = {
       nodes: [
         {

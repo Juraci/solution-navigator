@@ -38,7 +38,11 @@ export const usePomodoro = createGlobalState(() => {
 
   const waitingForUser = ref(false);
 
-  const { isActive: isRunning, pause, resume } = useIntervalFn(
+  const {
+    isActive: isRunning,
+    pause,
+    resume,
+  } = useIntervalFn(
     () => {
       if (remainingSeconds.value > 0) {
         remainingSeconds.value--;

@@ -4,8 +4,16 @@ import { usePomodoro } from '@/composables/usePomodoro';
 import { useRoute } from 'vue-router';
 
 const route = useRoute();
-const { timerDisplay, phaseName, isRunning, waitingForUser, start, stop, resumeTimer, skipInterval } =
-  usePomodoro();
+const {
+  timerDisplay,
+  phaseName,
+  isRunning,
+  waitingForUser,
+  start,
+  stop,
+  resumeTimer,
+  skipInterval,
+} = usePomodoro();
 
 const emit = defineEmits(['startPomodoro']);
 

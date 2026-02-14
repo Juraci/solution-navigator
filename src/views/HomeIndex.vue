@@ -53,7 +53,7 @@ const handleNodeNotFound = () => {
       @delete="deleteConfirmation"
       @node-not-found="handleNodeNotFound"
       @toggle-expand="isSidePanelVisible = !isSidePanelVisible"
-      @togglePomodoroPanel="isPomodoroPanelVisible = !isPomodoroPanelVisible"
+      @toggle-pomodoro-panel="isPomodoroPanelVisible = !isPomodoroPanelVisible"
     />
     <ConfirmDialog />
   </div>

@@ -20,7 +20,7 @@ const handleResume = () => {
 </script>
 
 <template>
-  <div data-test-pomodoro-panel>
+  <div class="pomodoro-panel" data-test-pomodoro-panel>
     <div class="pomodoro-phase">{{ phaseName }}</div>
     <div data-test-pomodoro-timer class="pomodoro-timer">{{ timerDisplay }}</div>
     <div class="pomodoro-actions">
@@ -52,7 +52,7 @@ const handleResume = () => {
         @click="stop"
       />
       <Button
-        v-if="isRunning"
+        v-if="isRunning && phaseName !== 'Work'"
         data-test-skip-pomodoro
         icon="pi pi-fast-forward"
         aria-label="Skip Interval"
@@ -65,6 +65,12 @@ const handleResume = () => {
 </template>
 
 <style scoped>
+.pomodoro-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 100%;
+}
 .pomodoro-phase {
   text-align: center;
   font-size: 1.2rem;

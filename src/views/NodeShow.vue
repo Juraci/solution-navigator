@@ -22,7 +22,7 @@ const props = defineProps({
 const emit = defineEmits(['delete', 'nodeNotFound', 'toggleExpand', 'togglePomodoroPanel']);
 
 const { findNode, refreshUpdatedAt, addChildNode, getRootNode, getPomodoroCount } = useNodeStore();
-const { timerDisplay, isRunning } = usePomodoro();
+const { timerDisplay, isRunning, phaseName } = usePomodoro();
 const editingTitle = ref(false);
 const editingContent = ref(false);
 const titlePlaceHolder = ref('add a title...');
@@ -54,6 +54,11 @@ const rootNodeAddress = computed(() => {
   return `/nodes/${getRootNode(props.nodeUuid).uuid}`;
 });
 
+const getPomodoroSeverity = computed(() => {
+  if (phaseName.value === 'Work') return 'danger';
+  return 'success';
+});
+
 const handleAddChildNode = () => {
   addChildNode(props.nodeUuid);
   refreshUpdatedAt(props.nodeUuid);
@@ -71,7 +76,7 @@ const handleAddChildNode = () => {
         severity="secondary"
         @click="emit('toggleExpand')"
       />
-      <OverlayBadge class="pomodoro-badge" v-if="isRunning" :value="timerDisplay" severity="danger">
+      <OverlayBadge class="pomodoro-badge" v-if="isRunning" :value="timerDisplay" :severity="getPomodoroSeverity">
         <Button
           data-test-show-pomodoro-panel
           class="pomodoro-button"

@@ -57,7 +57,7 @@ const handleNodeNotFound = () => {
     />
     <ConfirmDialog />
   </div>
-  <Drawer v-model:visible="isPomodoroPanelVisible" header="Pomodoro Panel" position="right">
+  <Drawer v-model:visible="isPomodoroPanelVisible" header="Pomodoro" position="right">
     <PomodoroTimer />
   </Drawer>
 </template>

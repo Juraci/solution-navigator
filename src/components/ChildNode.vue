@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import markdownit from 'markdown-it';
 import { ref, watch, computed } from 'vue';
 import Button from 'primevue/button';
@@ -8,20 +8,18 @@ import InputText from 'primevue/inputtext';
 import Popover from 'primevue/popover';
 import ScrollPanel from 'primevue/scrollpanel';
 import { useNodeStore } from '@/stores/NodeStore';
+import type { Node } from '@/types/Node';
 
-const props = defineProps({
-  nodeUuid: {
-    type: String,
-    default: '',
-  },
-  parentNodeUuid: {
-    type: String,
-    default: '',
-  },
-  level: {
-    type: Number,
-    default: 0,
-  },
+interface Props {
+  nodeUuid?: string;
+  parentNodeUuid?: string;
+  level?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  nodeUuid: '',
+  parentNodeUuid: '',
+  level: 0,
 });
 
 const {
@@ -33,46 +31,53 @@ const {
   getRootNode,
 } = useNodeStore();
 
-const editing = ref(false);
-const nodeTitle = ref('');
-const contentPreview = ref(null);
+const editing = ref<boolean>(false);
+const nodeTitle = ref<string>('');
+const contentPreview = ref<InstanceType<typeof Popover> | null>(null);
 const md = markdownit({ linkify: true });
 
-const node = findNode(props.nodeUuid);
+const node: Node | undefined = findNode(props.nodeUuid);
 if (!node) {
   enforceNodeTreeConsistency();
 } else {
   nodeTitle.value = node.title;
 
   watch(nodeTitle, (newValue) => {
+    if (!node) return;
     node.title = newValue;
     refreshUpdatedAt(node.uuid);
   });
 }
 
-const childNodes = computed(() => {
-  return node ? node.childNodes : [];
+const childNodes = computed<string[]>(() => {
+  return node?.childNodes ?? [];
 });
 
-const handleAddChildNode = () => {
+const handleAddChildNode = (): void => {
   addChildNode(props.nodeUuid);
   refreshUpdatedAt(props.nodeUuid);
-  refreshUpdatedAt(getRootNode(props.nodeUuid).uuid);
+  const rootNode = getRootNode(props.nodeUuid);
+  if (rootNode) {
+    refreshUpdatedAt(rootNode.uuid);
+  }
 };
 
-const handleDeleteNode = () => {
-  refreshUpdatedAt(getRootNode(props.nodeUuid).uuid);
+const handleDeleteNode = (): void => {
+  const rootNode = getRootNode(props.nodeUuid);
+  if (rootNode) {
+    refreshUpdatedAt(rootNode.uuid);
+  }
   deleteNode(props.nodeUuid);
 };
 
-const showContentPreview = (event) => {
-  if (!node.content) return;
-  contentPreview.value.show(event);
+const showContentPreview = (event: Event): void => {
+  if (!node?.content) return;
+  contentPreview.value?.show(event);
 };
 
-const hideContentPreview = (event) => {
-  if (!node.content) return;
-  contentPreview.value.hide(event);
+const hideContentPreview = (): void => {
+  if (!node?.content) return;
+  contentPreview.value?.hide();
 };
 </script>
 
@@ -134,17 +139,19 @@ const hideContentPreview = (event) => {
     </Chip>
   </div>
   <Popover ref="contentPreview" data-test-content-preview @mouseleave="hideContentPreview">
-    <ScrollPanel style="max-width: 40rem; max-height: 20rem">
+    <ScrollPanel v-if="node" style="max-width: 40rem; max-height: 20rem">
       <div class="content-preview" v-html="md.render(node.content)"></div>
     </ScrollPanel>
   </Popover>
-  <ChildNode
-    v-for="childNodeUuid in childNodes"
-    :key="childNodeUuid"
-    :node-uuid="childNodeUuid"
-    :parent-node-uuid="node.uuid"
-    :level="level + 1"
-  />
+  <template v-if="node">
+    <ChildNode
+      v-for="childNodeUuid in childNodes"
+      :key="childNodeUuid"
+      :node-uuid="childNodeUuid"
+      :parent-node-uuid="node.uuid"
+      :level="level + 1"
+    />
+  </template>
 </template>
 
 <style>

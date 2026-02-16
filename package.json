@@ -12,10 +12,11 @@
     "build": "run-p type-check \"build-only {@}\" --",
     "build-only": "vite build",
     "preview": "vite preview --port 5173",
-    "test:unit": "vitest",
+    "test:unit": "vitest --run",
     "test:e2e": "start-server-and-test preview http://localhost:5173 'cypress run --headed'",
     "test:e2e:dev": "start-server-and-test 'vite dev --port 5173' http://localhost:5173 'cypress open --e2e'",
     "type-check": "vue-tsc --build",
+    "test:all": "run-p type-check test:unit test:e2e",
     "lint": "eslint .",
     "format": "prettier --write src/"
   },

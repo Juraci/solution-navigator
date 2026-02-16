@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { useNodeStore } from '@/stores/NodeStore';
 import { storeToRefs } from 'pinia';
 

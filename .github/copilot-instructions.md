@@ -103,11 +103,13 @@ npm run preview      # Preview production build
 
 ### Testing
 ```bash
+npm run type-check             # Run TypeScript type checks
 npm run test:unit              # Run Vitest (specs/ directory)
 npm run test:e2e:dev           # Cypress against dev server (interactive)
 npm run test:e2e               # Cypress against production build
 npm run lint                   # ESLint check
 npm run format                 # Prettier auto-format src/
+npm run test:all               # Run type-check, unit tests, and e2e tests sequentially
 ```
 
 ### Test Patterns

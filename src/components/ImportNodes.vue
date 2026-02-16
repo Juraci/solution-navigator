@@ -1,24 +1,32 @@
-<script setup>
+<script setup lang="ts">
 import FileUpload from 'primevue/fileupload';
+import type { FileUploadUploaderEvent } from 'primevue/fileupload';
 import { useNodeStore } from '@/stores/NodeStore';
 import { storeToRefs } from 'pinia';
+import type { Node } from '@/types/Node';
 
 const store = useNodeStore();
 const { searchQuery, nodes } = storeToRefs(store);
 
-const handleFileUpload = (input) => {
+const handleFileUpload = (event: FileUploadUploaderEvent): void => {
+  const file = Array.isArray(event.files) ? event.files[0] : event.files;
+  if (!file) return;
+
   const reader = new FileReader();
 
-  reader.onload = (e) => {
+  reader.onload = (e: ProgressEvent<FileReader>): void => {
+    const result = e.target?.result;
+    if (typeof result !== 'string') return;
+
     try {
-      const json = JSON.parse(e.target.result);
+      const json = JSON.parse(result) as Node[];
       nodes.value = json;
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Error parsing JSON:', error);
     }
   };
 
-  reader.readAsText(input.files[0]);
+  reader.readAsText(file);
 };
 </script>
 

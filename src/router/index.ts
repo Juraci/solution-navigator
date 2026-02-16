@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import type { RouteRecordRaw } from 'vue-router';
 import HomeIndex from '@/views/HomeIndex.vue';
 
-const routes = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'index',

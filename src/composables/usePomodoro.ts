@@ -8,11 +8,13 @@ const SHORT_BREAK_DURATION = 5 * MINUTE;
 const LONG_BREAK_DURATION = 15 * MINUTE;
 const INTERVALS_BEFORE_LONG_BREAK = 4;
 
+type Phase = 'work' | 'short-break' | 'long-break';
+
 export const usePomodoro = createGlobalState(() => {
   const remainingSeconds = ref(WORK_DURATION);
-  const phase = ref('work');
+  const phase = ref<Phase>('work');
   const completedIntervals = ref(0);
-  const activeNodeUuid = ref(null);
+  const activeNodeUuid = ref<string | null>(null);
 
   const handlePhaseComplete = () => {
     if (phase.value === 'work') {
@@ -63,7 +65,7 @@ export const usePomodoro = createGlobalState(() => {
   });
 
   const phaseName = computed(() => {
-    const names = {
+    const names: Record<Phase, string> = {
       work: 'Work',
       'short-break': 'Short Break',
       'long-break': 'Long Break',
@@ -71,7 +73,7 @@ export const usePomodoro = createGlobalState(() => {
     return names[phase.value] || '';
   });
 
-  const start = (nodeUuid = null) => {
+  const start = (nodeUuid: string | null = null) => {
     if (isRunning.value) return;
     activeNodeUuid.value = nodeUuid;
     waitingForUser.value = false;

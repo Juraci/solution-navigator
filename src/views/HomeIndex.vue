@@ -1,23 +1,33 @@
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from 'vue';
+import { useRouter, useRoute, type Router, type RouteLocationNormalizedLoaded } from 'vue-router';
+import { useConfirm } from 'primevue/useconfirm';
+import ConfirmDialog from 'primevue/confirmdialog';
+import Drawer from 'primevue/drawer';
+import { useNodeStore } from '@/stores/NodeStore';
 import NodesArbor from '@/components/NodesArbor.vue';
 import SidePanelHeader from '@/components/SidePanelHeader.vue';
 import PomodoroTimer from '@/components/PomodoroTimer.vue';
-import ConfirmDialog from 'primevue/confirmdialog';
-import Drawer from 'primevue/drawer';
-import { useRouter, useRoute } from 'vue-router';
-import { useNodeStore } from '@/stores/NodeStore';
-import { useConfirm } from 'primevue/useconfirm';
 
-const router = useRouter();
-const route = useRoute();
-const isSidePanelVisible = ref(true);
-const isPomodoroPanelVisible = ref(false);
+interface ConfirmationOptions {
+  header: string;
+  message: string;
+  acceptLabel: string;
+  rejectLabel: string;
+  position: string;
+  accept: () => void;
+  reject: () => void;
+}
+
+const router: Router = useRouter();
+const route: RouteLocationNormalizedLoaded = useRoute();
+const isSidePanelVisible = ref<boolean>(true);
+const isPomodoroPanelVisible = ref<boolean>(false);
 const { deleteNode } = useNodeStore();
 const confirm = useConfirm();
 
-const deleteConfirmation = (nodeUuid) => {
-  const accept = () => {
+const deleteConfirmation = (nodeUuid: string): void => {
+  const accept = (): void => {
     router.push({ name: 'nodes.index' });
     deleteNode(nodeUuid);
   };
@@ -28,15 +38,15 @@ const deleteConfirmation = (nodeUuid) => {
     rejectLabel: 'No',
     position: 'topright',
     accept,
-    reject: () => {},
-  });
+    reject: (): void => {},
+  } as ConfirmationOptions);
 };
 
-const gridTemplateColumns = computed(() => {
+const gridTemplateColumns = computed<string>(() => {
   return isSidePanelVisible.value ? 'minmax(400px, 1fr) 3fr' : '1fr';
 });
 
-const handleNodeNotFound = () => {
+const handleNodeNotFound = (): void => {
   router.push({ name: 'node.not-found' });
 };
 </script>

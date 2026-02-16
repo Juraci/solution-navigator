@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useNodeStore } from '@/stores/NodeStore';
@@ -12,12 +12,12 @@ const { nodes, searchQuery } = storeToRefs(useNodeStore());
 
 const router = useRouter();
 
-const handleAddNode = () => {
+const handleAddNode = (): void => {
   const uuid = addNode();
   router.push({ name: 'node.show', params: { uuid } });
 };
 
-const downloadNodesLink = computed(() => {
+const downloadNodesLink = computed<string>(() => {
   const jsonNodes = JSON.stringify(nodes.value);
   const blob = new Blob([jsonNodes], { type: 'application/json' });
 

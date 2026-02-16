@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
+import { ref, watch, computed } from 'vue';
 import markdownit from 'markdown-it';
 import Button from 'primevue/button';
 import Badge from 'primevue/badge';
-import { ref, watch, computed } from 'vue';
 import InputText from 'primevue/inputtext';
 import Textarea from 'primevue/textarea';
 import Divider from 'primevue/divider';
@@ -10,28 +10,37 @@ import ScrollPanel from 'primevue/scrollpanel';
 import OverlayBadge from 'primevue/overlaybadge';
 import { useNodeStore } from '@/stores/NodeStore';
 import { usePomodoro } from '@/composables/usePomodoro';
+import type { Node } from '@/types/Node';
 import ChildNode from '@/components/ChildNode.vue';
 
-const props = defineProps({
-  nodeUuid: {
-    type: String,
-    default: '',
-  },
+interface NodeShowProps {
+  nodeUuid?: string;
+}
+
+interface NodeShowEmits {
+  delete: [nodeUuid: string];
+  nodeNotFound: [];
+  toggleExpand: [];
+  togglePomodoroPanel: [nodeUuid: string];
+}
+
+const props = withDefaults(defineProps<NodeShowProps>(), {
+  nodeUuid: '',
 });
 
-const emit = defineEmits(['delete', 'nodeNotFound', 'toggleExpand', 'togglePomodoroPanel']);
+const emit = defineEmits<NodeShowEmits>();
 
 const { findNode, refreshUpdatedAt, addChildNode, getRootNode, getPomodoroCount } = useNodeStore();
 const { timerDisplay, isRunning, phaseName } = usePomodoro();
-const editingTitle = ref(false);
-const editingContent = ref(false);
-const titlePlaceHolder = ref('add a title...');
-const nodeTitle = ref('');
-const nodeContent = ref('');
-const contentPlaceholder = ref('double click to add content or edit it...');
+const editingTitle = ref<boolean>(false);
+const editingContent = ref<boolean>(false);
+const titlePlaceHolder = ref<string>('add a title...');
+const nodeTitle = ref<string>('');
+const nodeContent = ref<string>('');
+const contentPlaceholder = ref<string>('double click to add content or edit it...');
 const md = markdownit({ html: true, linkify: true, typographer: true });
 
-const node = findNode(props.nodeUuid);
+const node = findNode(props.nodeUuid) as Node | undefined;
 
 if (!node) {
   emit('nodeNotFound');
@@ -39,27 +48,31 @@ if (!node) {
   nodeTitle.value = node.title;
   nodeContent.value = node.content;
 
-  watch(nodeTitle, (newValue) => {
-    node.title = newValue;
-    refreshUpdatedAt(node.uuid);
+  watch(nodeTitle, (newValue: string): void => {
+    if (node) {
+      node.title = newValue;
+      refreshUpdatedAt(node.uuid);
+    }
   });
 
-  watch(nodeContent, (newValue) => {
-    node.content = newValue;
-    refreshUpdatedAt(node.uuid);
+  watch(nodeContent, (newValue: string): void => {
+    if (node) {
+      node.content = newValue;
+      refreshUpdatedAt(node.uuid);
+    }
   });
 }
 
-const rootNodeAddress = computed(() => {
-  return `/nodes/${getRootNode(props.nodeUuid).uuid}`;
+const rootNodeAddress = computed<string>(() => {
+  return `/nodes/${getRootNode(props.nodeUuid)!.uuid}`;
 });
 
-const getPomodoroSeverity = computed(() => {
+const getPomodoroSeverity = computed<string>(() => {
   if (phaseName.value === 'Work') return 'danger';
   return 'success';
 });
 
-const handleAddChildNode = () => {
+const handleAddChildNode = (): void => {
   addChildNode(props.nodeUuid);
   refreshUpdatedAt(props.nodeUuid);
 };

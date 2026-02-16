@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import Button from 'primevue/button';
 import { usePomodoro } from '@/composables/usePomodoro';
 import { useRoute } from 'vue-router';
@@ -15,14 +15,16 @@ const {
   skipInterval,
 } = usePomodoro();
 
-const emit = defineEmits(['startPomodoro']);
+const emit = defineEmits<{
+  startPomodoro: [];
+}>();
 
-const handleStart = () => {
+const handleStart = (): void => {
   emit('startPomodoro');
-  start(route.params.uuid);
+  start(route.params.uuid as string);
 };
 
-const handleResume = () => {
+const handleResume = (): void => {
   resumeTimer();
 };
 </script>
